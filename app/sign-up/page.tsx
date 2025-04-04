@@ -1,11 +1,17 @@
-import { FC } from "react";
+"use client";
+import { FC, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import google from "@/public/svg/flat-color-icons_google.svg";
 import facebook from "@/public/svg/bi_facebook.svg";
 import apple from "@/public/svg/Apple_logo_black.svg 1.svg";
+import { postRegisterUser } from "../supabase/apiUser";
 
 const Register: FC = () => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
   return (
     <div className="h-screen w-full">
       <Image
@@ -15,7 +21,13 @@ const Register: FC = () => {
         className="object-cover object-top"
       />
       <div className="relative flex h-screen w-full items-center justify-center">
-        <form className="flex h-[600px] w-[500px] flex-col rounded-4xl bg-blue-500/30 px-[50px] py-[40px] text-white backdrop-blur-[16px]">
+        <form
+          className="flex h-[600px] w-[500px] flex-col rounded-4xl bg-blue-500/30 px-[50px] py-[40px] text-white backdrop-blur-[16px]"
+          onSubmit={(e: React.FormEvent) => {
+            e.preventDefault();
+            postRegisterUser(email, password);
+          }}
+        >
           <h2 className="poppins h-[60px] text-center text-[32px]">Sign Up</h2>
           <label htmlFor="fname" className="text-[16px]">
             Email
@@ -25,30 +37,42 @@ const Register: FC = () => {
             type="text"
             className="mt-2 mb-2 h-[40px] w-full rounded-[8px] bg-white px-2 text-gray-600"
             placeholder="username@gmail.com"
+            value={email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setEmail(e.target.value)
+            }
           />
           <label htmlFor="fname" className="text-[16px]">
             Password
           </label>
           <input
             id="frame"
-            type="text"
+            type="password"
             className="mt-2 mb-2 h-[40px] w-full rounded-[8px] bg-white px-2 text-gray-600"
             placeholder="Password"
+            value={password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setPassword(e.target.value)
+            }
           />
           <label htmlFor="fname" className="text-[16px]">
             Repeat password
           </label>
           <input
             id="frame"
-            type="text"
+            type="password"
             className="mt-2 mb-2 h-[40px] w-full rounded-[8px] bg-white px-2 text-gray-600"
             placeholder="Repeat password"
+            value={confirmPassword}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setConfirmPassword(e.target.value)
+            }
           />
           <button
             type="submit"
             className="my-6 h-10 w-full rounded-[8px] bg-[#003465]"
           >
-            Continue
+            Sign Up
           </button>
           <p className="text-center text-[12px]">or continue with</p>
           <div className="my-6 flex h-10 justify-between space-x-[16px]">
