@@ -2,10 +2,8 @@
 import { FC, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import google from "@/public/svg/flat-color-icons_google.svg";
-import facebook from "@/public/svg/bi_facebook.svg";
-import apple from "@/public/svg/Apple_logo_black.svg 1.svg";
 import { postRegisterUser } from "../supabase/apiUser";
+import OauthButtons from "../_components/OauthButtons";
 
 const Register: FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -70,26 +68,19 @@ const Register: FC = () => {
           />
           <button
             type="submit"
-            className="my-6 h-10 w-full rounded-[8px] bg-[#003465]"
+            className="my-6 h-10 w-full cursor-pointer rounded-[8px] bg-[#003465] hover:opacity-80"
           >
             Sign Up
           </button>
           <p className="text-center text-[12px]">or continue with</p>
-          <div className="my-6 flex h-10 justify-between space-x-[16px]">
-            <div className="flex flex-1 items-center justify-center rounded-[8px] bg-white">
-              <Image src={google} alt="google"></Image>
-            </div>
-            <div className="flex flex-1 items-center justify-center rounded-[8px] bg-white">
-              <Image src={apple} alt="apple"></Image>
-            </div>
-            <div className="flex flex-1 items-center justify-center rounded-[8px] bg-white">
-              <Image src={facebook} alt="facebook"></Image>
-            </div>
-          </div>
+          <OauthButtons />
 
           <p className="text-center">
             Have an account?
-            <Link href="sign-in" className="text-black">
+            <Link
+              href="sign-in"
+              className="cursor-pointer text-black hover:opacity-80"
+            >
               Sign in
             </Link>
           </p>
