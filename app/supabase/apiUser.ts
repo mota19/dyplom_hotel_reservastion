@@ -61,6 +61,19 @@ export async function updateUser(new_password: string) {
   return data;
 }
 
+//зайти на акк
+export async function signInWithEmailPassword(email: string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (error) {
+    console.error(error);
+  }
+
+  return data;
+}
+
 //зайти на facebook
 export async function signInWithFacebook() {
   const { data, error } = await supabase.auth.signInWithOAuth({

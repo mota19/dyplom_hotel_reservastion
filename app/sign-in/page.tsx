@@ -1,10 +1,20 @@
 "use client";
-import { FC } from "react";
+import { FC, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import OauthButtons from "../_components/OauthButtons";
+import { signInWithEmailPassword } from "../supabase/apiUser";
 
 const Login: FC = () => {
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const date = signInWithEmailPassword(email, password);
+    console.log(date);
+  }
+
   return (
     <div className="h-screen w-full">
       <Image
@@ -14,7 +24,10 @@ const Login: FC = () => {
         className="object-cover object-top"
       />
       <div className="relative flex h-screen w-full items-center justify-center">
-        <form className="flex h-auto w-[500px] flex-col rounded-4xl bg-blue-500/30 px-[50px] py-[40px] text-white backdrop-blur-[16px]">
+        <form
+          className="flex h-auto w-[500px] flex-col rounded-4xl bg-blue-500/30 px-[50px] py-[40px] text-white backdrop-blur-[16px]"
+          onSubmit={handleSubmit}
+        >
           <h2 className="poppins h-[60px] text-center text-[32px]">Login</h2>
           <label htmlFor="fname" className="text-[16px]">
             Email
@@ -24,6 +37,10 @@ const Login: FC = () => {
             type="text"
             className="mt-2 mb-2 h-[40px] w-full rounded-[8px] bg-white px-2 text-gray-600"
             placeholder="username@gmail.com"
+            value={email}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setEmail(e.target.value);
+            }}
           />
           <label htmlFor="fname" className="text-[16px]">
             Password
@@ -33,6 +50,10 @@ const Login: FC = () => {
             type="text"
             className="mt-2 mb-2 h-[40px] w-full rounded-[8px] bg-white px-2 text-gray-600"
             placeholder="Password"
+            value={password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setPassword(e.target.value);
+            }}
           />
           <div className="flex items-center justify-between">
             <div className="flex space-x-2">
