@@ -4,11 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { postRegisterUser } from "../supabase/apiUser";
 import OauthButtons from "../_components/OauthButtons";
+import { useRouter } from "next/navigation";
 
 const Register: FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("sign-up/1");
+  };
 
   return (
     <div className="h-screen w-full">
@@ -20,13 +27,23 @@ const Register: FC = () => {
       />
       <div className="relative flex h-screen w-full items-center justify-center">
         <form
-          className="flex h-[600px] w-[500px] flex-col rounded-4xl bg-blue-500/30 px-[50px] py-[40px] text-white backdrop-blur-[16px]"
+          className="flex h-auto w-[500px] flex-col rounded-4xl bg-blue-500/30 px-[50px] py-[40px] text-white backdrop-blur-[16px]"
           onSubmit={(e: React.FormEvent) => {
             e.preventDefault();
             postRegisterUser(email, password);
           }}
         >
           <h2 className="poppins h-[60px] text-center text-[32px]">Sign Up</h2>
+          <div className="mt-4 mb-6 flex justify-center space-x-4">
+            {["0", "1", "2"].map((step) => (
+              <div
+                key={step}
+                className={`h-4 w-4 rounded-full transition-all duration-300 ${
+                  step === "0" ? "bg-white" : "bg-white/30"
+                }`}
+              ></div>
+            ))}
+          </div>
           <label htmlFor="fname" className="text-[16px]">
             Email
           </label>
@@ -69,8 +86,9 @@ const Register: FC = () => {
           <button
             type="submit"
             className="my-6 h-10 w-full cursor-pointer rounded-[8px] bg-[#003465] hover:opacity-80"
+            onClick={handleClick}
           >
-            Sign Up
+            Continue
           </button>
           <p className="text-center text-[12px]">or continue with</p>
           <OauthButtons />

@@ -14,7 +14,7 @@ const Login: FC = () => {
         className="object-cover object-top"
       />
       <div className="relative flex h-screen w-full items-center justify-center">
-        <form className="flex h-[550px] w-[500px] flex-col rounded-4xl bg-blue-500/30 px-[50px] py-[40px] text-white backdrop-blur-[16px]">
+        <form className="flex h-auto w-[500px] flex-col rounded-4xl bg-blue-500/30 px-[50px] py-[40px] text-white backdrop-blur-[16px]">
           <h2 className="poppins h-[60px] text-center text-[32px]">Login</h2>
           <label htmlFor="fname" className="text-[16px]">
             Email
@@ -46,7 +46,7 @@ const Login: FC = () => {
                 Remember me
               </label>
             </div>
-            <Link href="#">Forgot password?</Link>
+            <Link href="sign-in/reset-password">Forgot password?</Link>
           </div>
           <button
             type="submit"
