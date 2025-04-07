@@ -26,7 +26,7 @@ export async function verifyEmailOtp(email: string, token: string) {
     console.error(error);
   }
 
-  return data;
+  return { data, error };
 }
 
 export async function resendEmailOtp(email: string) {
@@ -63,6 +63,8 @@ export async function updateUser(new_password: string) {
 
 //зайти на акк
 export async function signInWithEmailPassword(email: string, password: string) {
+  console.log(email);
+  console.log(password);
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
@@ -71,7 +73,7 @@ export async function signInWithEmailPassword(email: string, password: string) {
     console.error(error);
   }
 
-  return data;
+  return { data, error };
 }
 
 //зайти на facebook

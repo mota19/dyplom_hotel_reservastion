@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState, useRef, useEffect } from "react";
+import { FC, useState, useRef, useEffect, FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -9,8 +9,10 @@ import { useRouter } from "next/navigation";
 const VerifyEmail: FC = () => {
   const { step } = useParams();
 
-  const [code, setCode] = useState("");
-  const [timer, setTimer] = useState(60);
+  const [code, setCode] = useState<string>("");
+  const [timer, setTimer] = useState<number>(60);
+  const [email, setEmail] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
   const inputRefs = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -21,6 +23,35 @@ const VerifyEmail: FC = () => {
   ];
 
   const router = useRouter();
+
+  useEffect(() => {
+    const getEmailFromCookies = () => {
+      const cookieArr = document.cookie.split("; ");
+      for (let i = 0; i < cookieArr.length; i++) {
+        const cookie = cookieArr[i].split("=");
+        if (cookie[0] === "userEmail") {
+          return cookie[1];
+        }
+      }
+      return "";
+    };
+
+    const emailFromCookies = getEmailFromCookies();
+    if (emailFromCookies) {
+      setEmail(emailFromCookies);
+    }
+  }, []);
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    const { error } = await verifyEmailOtp(email, code);
+
+    if (!error) {
+      router.push("/sign-in");
+    } else {
+      setError(true);
+    }
+  }
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>, index: number) {
     const input = e.target;
@@ -85,13 +116,25 @@ const VerifyEmail: FC = () => {
   };
 
   useEffect(() => {
-    startTimer();
-  }, []);
+    if (email) {
+      const interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev === 0) {
+            clearInterval(interval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [email]);
 
   function handleClickResend() {
     setTimer(100);
     startTimer();
-    resendEmailOtp("mota82589@gmail.com");
+    resendEmailOtp(email);
   }
 
   return (
@@ -105,9 +148,7 @@ const VerifyEmail: FC = () => {
       <div className="relative flex h-screen w-full items-center justify-center">
         <form
           className="flex h-auto w-[500px] flex-col rounded-4xl bg-blue-500/30 px-[50px] py-[40px] text-white backdrop-blur-[16px]"
-          onSubmit={(e: React.FormEvent) => {
-            e.preventDefault();
-          }}
+          onSubmit={handleSubmit}
         >
           <h2 className="poppins h-[60px] text-center text-[32px]">Sign Up</h2>
           <div className="mt-4 mb-6 flex justify-center space-x-4">
@@ -123,9 +164,7 @@ const VerifyEmail: FC = () => {
           <p className="text-center text-[16px]">
             Enter the verification code we sent to
             <br />
-            <span className="text-center text-[16px] text-black">
-              username@gmail.com
-            </span>
+            <span className="text-center text-[16px] text-black">{email}</span>
           </p>
           <div className="flex flex-row gap-4">
             {Array(6)
@@ -145,9 +184,17 @@ const VerifyEmail: FC = () => {
                 />
               ))}
           </div>
+          {error && (
+            <p className="mb-2 text-center text-red-600">
+              The verification code is incorrect. Please try again.
+            </p>
+          )}
           {timer > 0 && (
             <p className="text-center">
-              Resend a code in {timer < 10 ? `0:0${timer}` : `0:${timer}`}
+              Resend code in{" "}
+              {timer >= 60
+                ? `${String(Math.floor(timer / 60)).padStart(2, "0")}:${String(timer % 60).padStart(2, "0")}`
+                : `00:${String(timer).padStart(2, "0")}`}
             </p>
           )}
           {timer === 0 && (
@@ -171,10 +218,6 @@ const VerifyEmail: FC = () => {
             <button
               type="submit"
               className="my-6 h-10 w-full cursor-pointer rounded-[8px] bg-[#003465] hover:opacity-80"
-              onClick={(e: React.FormEvent) => {
-                e.preventDefault();
-                verifyEmailOtp("mota82589@gmail.com", code);
-              }}
             >
               Sign Up
             </button>
@@ -182,7 +225,7 @@ const VerifyEmail: FC = () => {
           <p className="text-center">
             Have an account?
             <Link
-              href="sign-in"
+              href="/sign-in"
               className="cursor-pointer text-black hover:opacity-80"
             >
               Sign in

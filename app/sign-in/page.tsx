@@ -4,15 +4,23 @@ import Image from "next/image";
 import Link from "next/link";
 import OauthButtons from "../_components/OauthButtons";
 import { signInWithEmailPassword } from "../supabase/apiUser";
+import { useRouter } from "next/navigation";
 
 const Login: FC = () => {
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [errors, setError] = useState<boolean>(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  const router = useRouter();
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const date = signInWithEmailPassword(email, password);
-    console.log(date);
+    const { error } = await signInWithEmailPassword(email, password);
+
+    if (!error) {
+      router.push("/");
+    } else {
+      setError(true);
+    }
   }
 
   return (
@@ -69,6 +77,11 @@ const Login: FC = () => {
             </div>
             <Link href="sign-in/reset-password">Forgot password?</Link>
           </div>
+          {errors && (
+            <p className="mb-2 text-center text-red-600">
+              Password or emaile are wrong. Please try again.
+            </p>
+          )}
           <button
             type="submit"
             className="my-6 h-10 w-full cursor-pointer rounded-[8px] bg-[#003465] hover:opacity-80"
