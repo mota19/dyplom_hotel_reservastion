@@ -3,7 +3,7 @@ import { FC, useState, useRef, useEffect, FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { resendEmailOtp, verifyEmailOtp } from "../supabase/apiUser";
+import { resendEmailOtp, verifyEmailOtp } from "../_supabase/apiUser";
 import { useRouter } from "next/navigation";
 
 const VerifyEmail: FC = () => {

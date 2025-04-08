@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import OauthButtons from "../_components/OauthButtons";
-import { signInWithEmailPassword } from "../supabase/apiUser";
+import { signInWithEmailPassword } from "../_supabase/apiUser";
 import { useRouter } from "next/navigation";
 
 const Login: FC = () => {

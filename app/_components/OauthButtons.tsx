@@ -7,7 +7,7 @@ import {
   signInWithDiscord,
   signInWithFacebook,
   signInWithGoogle,
-} from "../supabase/apiUser";
+} from "../_supabase/apiUser";
 
 const OauthButtons: FC = () => {
   return (

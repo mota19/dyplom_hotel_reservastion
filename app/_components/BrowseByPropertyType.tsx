@@ -10,7 +10,7 @@ import Image from "next/image";
 
 const BrowseByPropertyType: FC = () => {
   return (
-    <div className="px-8">
+    <div className="mb-8 px-8">
       <h2 className="mb-4 text-2xl font-semibold">Browse by property type</h2>
       <Carousel
         opts={{

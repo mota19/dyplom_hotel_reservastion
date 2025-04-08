@@ -1,7 +1,7 @@
 "use client";
 import { FC, useState } from "react";
 import Image from "next/image";
-import { updateUser } from "@/app/supabase/apiUser";
+import { updateUser } from "@/app/_supabase/apiUser";
 
 const ResetPassword: FC = () => {
   const [password, setPassword] = useState<string>("");

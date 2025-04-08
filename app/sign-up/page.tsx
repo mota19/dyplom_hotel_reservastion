@@ -2,7 +2,7 @@
 import { FC, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { postRegisterUser } from "../supabase/apiUser";
+import { postRegisterUser } from "../_supabase/apiUser";
 import OauthButtons from "../_components/OauthButtons";
 import { useRouter } from "next/navigation";
 
