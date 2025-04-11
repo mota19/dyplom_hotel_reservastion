@@ -63,8 +63,6 @@ export async function updateUser(new_password: string) {
 
 //зайти на акк
 export async function signInWithEmailPassword(email: string, password: string) {
-  console.log(email);
-  console.log(password);
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
