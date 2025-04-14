@@ -1,6 +1,8 @@
 import { FC } from "react";
 import Image from "next/image";
 
+import { DateRangePicker } from "./DateRangePicker";
+
 const ReservationMain: FC = () => {
   return (
     <main className="relative flex h-[400px] flex-col items-center">
@@ -13,36 +15,27 @@ const ReservationMain: FC = () => {
       />
       <div className="absolute top-[60%] flex h-[100px] w-[800px] translate-y-2.5 justify-between rounded-4xl bg-white px-4 shadow-lg">
         <div className="flex">
-          <div className="my-4 flex flex-col justify-center border-gray-600">
-            <label className="font-semibold text-gray-700">Location</label>
+          <div className="flex h-full flex-col justify-center border-gray-600">
+            <label className="px-2 font-semibold text-gray-700">Location</label>
             <input
               type="text"
               placeholder="Where are you going?"
-              className="text-gray-600 placeholder-gray-400 focus:outline-none"
+              className="bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-md p-2 text-gray-600 placeholder-gray-400 transition-all focus:outline-none"
             />
           </div>
-          <div className="my-4 flex flex-col justify-center border-gray-600">
-            <label className="font-semibold text-gray-700">Check-in</label>
-            <input
-              type="date"
-              placeholder="Where are you going?"
-              className="text-gray-600 placeholder-gray-400 focus:outline-none"
-            />
+          <div className="flex h-full flex-col justify-center border-gray-600">
+            <label className="px-2 font-semibold text-gray-700">
+              Chek-in/Check-out
+            </label>
+            <DateRangePicker></DateRangePicker>
           </div>
-          <div className="my-4 flex flex-col justify-center border-gray-600">
-            <label className="font-semibold text-gray-700">Check-out</label>
-            <input
-              type="date"
-              placeholder="Where are you going?"
-              className="text-gray-600 placeholder-gray-400 focus:outline-none"
-            />
-          </div>
+
           <div className="flex flex-col justify-center">
             <label className="font-semibold text-gray-700">Guests</label>
             <input
               type="text"
               placeholder="Number of guests?"
-              className="text-gray-600 placeholder-gray-400 focus:outline-none"
+              className="bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-md p-2 text-gray-600 placeholder-gray-400 transition-all focus:outline-none"
             />
           </div>
         </div>
