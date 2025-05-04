@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 
+const accomodations = { type: ["hotels", "motels", "cabins"], img: [] };
+
 const BrowseByPropertyType: FC = () => {
   return (
     <div className="mb-8 px-8">
@@ -19,9 +21,9 @@ const BrowseByPropertyType: FC = () => {
         className="w-full"
       >
         <CarouselContent>
-          {Array.from({ length: 100 }).map((_, index) => (
+          {accomodations.type.map((el) => (
             <CarouselItem
-              key={index}
+              key={el}
               className="relative md:basis-1/2 lg:basis-1/3"
             >
               <Image
@@ -32,7 +34,7 @@ const BrowseByPropertyType: FC = () => {
                 className="h-[300px] w-full rounded-4xl object-cover"
               />
               <span className="absolute bottom-4 left-8 rounded-full bg-white/80 px-3 py-1 text-sm">
-                Apartment
+                {el}
               </span>
             </CarouselItem>
           ))}

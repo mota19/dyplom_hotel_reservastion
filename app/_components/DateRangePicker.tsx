@@ -12,7 +12,11 @@ import { cn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
 import { CalendarIcon } from "lucide-react";
 
-export function DateRangePicker() {
+export function DateRangePicker({
+  onDateChange,
+}: {
+  onDateChange: (date: DateRange | undefined) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
@@ -46,6 +50,7 @@ export function DateRangePicker() {
           selected={date}
           onSelect={(newDate) => {
             setDate(newDate);
+            onDateChange(newDate); // 🔄 передаємо в батьківський компонент
             if (newDate?.from && newDate?.to) {
               setOpen(false);
             }

@@ -1,9 +1,11 @@
-import { FC } from "react";
+"use client";
+import { FC, useState } from "react";
 import Image from "next/image";
 
 import { DateRangePicker } from "./DateRangePicker";
-
+import { DateRange } from "react-day-picker";
 const ReservationMain: FC = () => {
+  const [range, setRange] = useState<DateRange | undefined>();
   return (
     <main className="relative flex h-[400px] flex-col items-center">
       <Image
@@ -27,7 +29,7 @@ const ReservationMain: FC = () => {
             <label className="px-2 font-semibold text-gray-700">
               Chek-in/Check-out
             </label>
-            <DateRangePicker></DateRangePicker>
+            <DateRangePicker onDateChange={setRange}></DateRangePicker>
           </div>
 
           <div className="flex flex-col justify-center">

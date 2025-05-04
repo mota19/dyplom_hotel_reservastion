@@ -7,8 +7,11 @@ import {
 } from "@/components/ui/carousel";
 
 import HotelCard from "./HotelCard";
+import { getPopularAccommodations } from "../_supabase/hotelApi";
 
-const Hotels: FC = () => {
+const Hotels: FC = async () => {
+  const { data, error } = await getPopularAccommodations();
+  console.log(data);
   return (
     <div className="px-8">
       <h2 className="mb-4 text-2xl font-semibold">Popular Hotels</h2>
@@ -18,9 +21,18 @@ const Hotels: FC = () => {
         }}
         className="mb-4 w-full"
       >
+        {error && <div>some error</div>}
         <CarouselContent className="flex">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <HotelCard key={index} />
+          {data?.map((el) => (
+            <HotelCard
+              key={el.id}
+              city={el.city}
+              name={el.name}
+              star_rating={el.star_rating}
+              country={el.country}
+              id={el.id}
+              pricePerNight={el.pricePerNight}
+            />
           ))}
         </CarouselContent>
         <CarouselPrevious />

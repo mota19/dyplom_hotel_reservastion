@@ -1,18 +1,68 @@
-import { FC } from "react";
+"use client";
+
+import { FC, useState, useEffect, ChangeEvent, FormEvent } from "react";
 import Image from "next/image";
 import Arrow from "@/public/svg/reshot-icon-arrow-diagonal-up-right-Y2ND6FM3RW.svg";
 import Destination from "@/public/svg/map-spot-svgrepo-com.svg";
-import CheckIn from "@/public/svg/calendar-check-fill.svg";
-import CheckOut from "@/public/svg/reshot-icon-schedule-not-successful-LPUSR9G8F5-a214b.svg";
 import Man from "@/public/svg/1699635.svg";
+import { getBookingSearch } from "../_supabase/hotelApi";
+import { useAppDispatch } from "@/redux/hooks/hooks";
+import { allBookingSearch } from "@/redux/slices/bookingSlice";
+import {
+  setCity,
+  setNumberOfGuests,
+  setInDate,
+  setOut,
+} from "@/redux/slices/infoAboutBooking";
+import { DateRangePicker } from "./DateRangePicker";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 const SideBarSearch: FC = () => {
+  const [inputValue, setInputValue] = useState<string>("");
+  const [destination, setDestination] = useState<string>("");
+  const [gueests, setGueests] = useState<number>(0);
+  const [range, setRange] = useState<DateRange | undefined>();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!destination) return;
+    (async function fetchData() {
+      const { data, error } = await getBookingSearch(destination);
+      console.log(data);
+      if (error) {
+        console.log(error);
+      } else {
+        dispatch(allBookingSearch(data));
+        dispatch(setCity(destination));
+      }
+    })();
+  }, [destination, dispatch]);
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setDestination(inputValue);
+    if (range?.from) {
+      dispatch(setInDate(format(range.from, "MMM, d")));
+    }
+    if (range?.to) {
+      dispatch(setOut(format(range.to, "d, MMM")));
+    }
+    dispatch(setNumberOfGuests(gueests));
+  }
+
   return (
-    <form className="flex max-w-[400px] flex-col gap-3 bg-gray-100 p-8">
+    <form
+      className="flex max-w-[400px] flex-col gap-3 bg-gray-100 p-8"
+      onSubmit={handleSubmit}
+    >
       <Image
         src={Arrow}
         alt="arrow"
         className="rotate-225 cursor-pointer"
+        onClick={router.back}
       ></Image>
       <h2 className="text-2xl font-[600]">Your search</h2>
       <div className="flex flex-col">
@@ -22,6 +72,11 @@ const SideBarSearch: FC = () => {
             type="text"
             id="oo"
             className="h-[40px] w-full rounded-4xl bg-white pr-2 pl-10"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setInputValue(e.target.value)
+            }
+            value={inputValue}
+            required
           />
           <Image
             src={Destination}
@@ -35,44 +90,22 @@ const SideBarSearch: FC = () => {
       <div className="flex flex-col">
         <label htmlFor="oo">Check-in-date</label>
         <div className="relative w-full">
-          <input
-            type="text"
-            id="oo"
-            className="h-[40px] w-full rounded-4xl bg-white pr-2 pl-10"
-          />
-          <Image
-            src={CheckIn}
-            width={16}
-            height={16}
-            alt="CheckIn"
-            className="absolute top-1/2 left-3 -translate-y-1/2"
-          />
+          <DateRangePicker onDateChange={setRange}></DateRangePicker>
         </div>
       </div>
+
       <div className="flex flex-col">
-        <label htmlFor="oo">Check-out-date</label>
+        <label htmlFor="guests">Guests</label>
         <div className="relative w-full">
           <input
-            type="text"
-            id="oo"
+            type="number"
+            id="guests"
             className="h-[40px] w-full rounded-4xl bg-white pr-2 pl-10"
-          />
-          <Image
-            src={CheckOut}
-            width={16}
-            height={16}
-            alt="CheckOut"
-            className="absolute top-1/2 left-3 -translate-y-1/2"
-          />
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <label htmlFor="oo">Guests</label>
-        <div className="relative w-full">
-          <input
-            type="text"
-            id="oo"
-            className="h-[40px] w-full rounded-4xl bg-white pr-2 pl-10"
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setGueests(+e.target.value)
+            }
+            value={gueests}
+            required
           />
           <Image
             src={Man}

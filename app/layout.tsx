@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
-
+import { ReduxProvider } from "./reduxProvider";
 const roboto = Poppins({
   weight: ["300", "400", "500", "600", "700", "900"],
   subsets: ["latin"],
@@ -21,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={roboto.className}>
-      <body>{children}</body>
+      <body>
+        <ReduxProvider>{children}</ReduxProvider>
+      </body>
     </html>
   );
 }
