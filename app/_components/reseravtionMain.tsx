@@ -6,6 +6,7 @@ import { DateRangePicker } from "./DateRangePicker";
 import { DateRange } from "react-day-picker";
 const ReservationMain: FC = () => {
   const [range, setRange] = useState<DateRange | undefined>();
+  console.log(range);
   return (
     <main className="relative flex h-[400px] flex-col items-center">
       <Image
