@@ -7,6 +7,7 @@ import Destination from "@/public/svg/map-spot-svgrepo-com.svg";
 import Man from "@/public/svg/1699635.svg";
 import { getBookingSearch } from "../_supabase/hotelApi";
 import { useAppDispatch } from "@/redux/hooks/hooks";
+import { useAppSelector } from "@/redux/hooks/hooks";
 import { allBookingSearch } from "@/redux/slices/bookingSlice";
 import {
   setCity,
@@ -21,8 +22,10 @@ import { useRouter } from "next/navigation";
 
 const SideBarSearch: FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [destination, setDestination] = useState<string>("");
-  const [gueests, setGueests] = useState<number>(0);
+  const [destination, setDestination] = useState<string>(
+    useAppSelector((state) => state.info.destination) ?? "",
+  );
+  const [gueests, setGueests] = useState<string>("");
   const [range, setRange] = useState<DateRange | undefined>();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -50,7 +53,7 @@ const SideBarSearch: FC = () => {
     if (range?.to) {
       dispatch(setOut(format(range.to, "d, MMM")));
     }
-    dispatch(setNumberOfGuests(gueests));
+    dispatch(setNumberOfGuests(+gueests));
   }
 
   return (
@@ -89,7 +92,7 @@ const SideBarSearch: FC = () => {
       </div>
       <div className="flex flex-col">
         <label htmlFor="oo">Check-in-date</label>
-        <div className="relative w-full">
+        <div className="relative w-[400px]">
           <DateRangePicker onDateChange={setRange}></DateRangePicker>
         </div>
       </div>
@@ -98,12 +101,15 @@ const SideBarSearch: FC = () => {
         <label htmlFor="guests">Guests</label>
         <div className="relative w-full">
           <input
-            type="number"
+            type="text"
             id="guests"
             className="h-[40px] w-full rounded-4xl bg-white pr-2 pl-10"
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setGueests(+e.target.value)
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              const value = e.target.value;
+              if (/^\d*$/.test(value)) {
+                setGueests(e.target.value);
+              }
+            }}
             value={gueests}
             required
           />

@@ -19,3 +19,9 @@ export interface infoAboutBookingProp {
   outDate: string;
   numberOfGuest: number;
 }
+
+export interface IuserProviderState {
+  google: boolean;
+  facebook: boolean;
+  discord: boolean;
+}

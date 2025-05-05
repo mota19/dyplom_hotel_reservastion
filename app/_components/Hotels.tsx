@@ -11,7 +11,6 @@ import { getPopularAccommodations } from "../_supabase/hotelApi";
 
 const Hotels: FC = async () => {
   const { data, error } = await getPopularAccommodations();
-  console.log(data);
   return (
     <div className="px-8">
       <h2 className="mb-4 text-2xl font-semibold">Popular Hotels</h2>

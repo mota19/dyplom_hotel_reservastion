@@ -55,7 +55,7 @@ const Login: FC = () => {
           </label>
           <input
             id="frame"
-            type="text"
+            type="password"
             className="mt-2 mb-2 h-[40px] w-full rounded-[8px] bg-white px-2 text-gray-600"
             placeholder="Password"
             value={password}

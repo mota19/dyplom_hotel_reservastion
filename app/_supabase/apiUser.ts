@@ -74,6 +74,27 @@ export async function signInWithEmailPassword(email: string, password: string) {
   return { data, error };
 }
 
+//перевіряє чи користувач зайшов на акаунт
+export async function checkSession() {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) {
+    console.error(error);
+  }
+
+  console.log(data);
+
+  return { data, error };
+}
+
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error(error);
+  }
+
+  return { error };
+}
+
 //зайти на facebook
 export async function signInWithFacebook() {
   const { data, error } = await supabase.auth.signInWithOAuth({

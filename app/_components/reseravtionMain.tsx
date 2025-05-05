@@ -1,12 +1,39 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useState, FormEvent, ChangeEvent } from "react";
 import Image from "next/image";
-
+import { useAppDispatch } from "@/redux/hooks/hooks";
 import { DateRangePicker } from "./DateRangePicker";
 import { DateRange } from "react-day-picker";
+
+import {
+  setCity,
+  setNumberOfGuests,
+  setInDate,
+  setOut,
+} from "@/redux/slices/infoAboutBooking";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+
 const ReservationMain: FC = () => {
+  const [destination, setDestination] = useState<string>("");
+  const [gueests, setGueests] = useState<string>("");
   const [range, setRange] = useState<DateRange | undefined>();
-  console.log(range);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (range?.from) {
+      dispatch(setInDate(format(range.from, "MMM, d")));
+    }
+    if (range?.to) {
+      dispatch(setOut(format(range.to, "d, MMM")));
+    }
+    dispatch(setNumberOfGuests(+gueests));
+    dispatch(setCity(destination));
+    console.log(destination);
+    router.push("/booking");
+  }
   return (
     <main className="relative flex h-[400px] flex-col items-center">
       <Image
@@ -16,13 +43,20 @@ const ReservationMain: FC = () => {
         height={300}
         className="mb-[100px] h-[300px] w-full rounded-4xl object-cover"
       />
-      <div className="absolute top-[60%] flex h-[100px] w-[800px] translate-y-2.5 justify-between rounded-4xl bg-white px-4 shadow-lg">
+      <form
+        className="absolute top-[60%] flex h-[100px] w-[800px] translate-y-2.5 justify-between rounded-4xl bg-white px-4 shadow-lg"
+        onSubmit={handleSubmit}
+      >
         <div className="flex">
           <div className="flex h-full flex-col justify-center border-gray-600">
             <label className="px-2 font-semibold text-gray-700">Location</label>
             <input
               type="text"
               placeholder="Where are you going?"
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setDestination(e.target.value)
+              }
+              value={destination}
               className="bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-md p-2 text-gray-600 placeholder-gray-400 transition-all focus:outline-none"
             />
           </div>
@@ -38,7 +72,14 @@ const ReservationMain: FC = () => {
             <input
               type="text"
               placeholder="Number of guests?"
-              className="bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-md p-2 text-gray-600 placeholder-gray-400 transition-all focus:outline-none"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  setGueests(e.target.value);
+                }
+              }}
+              value={gueests}
+              className="no-spinner bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-md p-2 text-gray-600 placeholder-gray-400 transition-all focus:outline-none"
             />
           </div>
         </div>
@@ -58,7 +99,7 @@ const ReservationMain: FC = () => {
             />
           </svg>
         </button>
-      </div>
+      </form>
     </main>
   );
 };
