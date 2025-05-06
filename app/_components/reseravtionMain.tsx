@@ -31,7 +31,6 @@ const ReservationMain: FC = () => {
     }
     dispatch(setNumberOfGuests(+gueests));
     dispatch(setCity(destination));
-    console.log(destination);
     router.push("/booking");
   }
   return (

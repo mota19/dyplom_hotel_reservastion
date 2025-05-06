@@ -34,9 +34,8 @@ const SideBarSearch: FC = () => {
     if (!destination) return;
     (async function fetchData() {
       const { data, error } = await getBookingSearch(destination);
-      console.log(data);
       if (error) {
-        console.log(error);
+        console.error(error);
       } else {
         dispatch(allBookingSearch(data));
         dispatch(setCity(destination));

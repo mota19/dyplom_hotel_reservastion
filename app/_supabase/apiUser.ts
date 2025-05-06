@@ -81,8 +81,6 @@ export async function checkSession() {
     console.error(error);
   }
 
-  console.log(data);
-
   return { data, error };
 }
 
@@ -106,16 +104,6 @@ export async function signInWithFacebook() {
   }
 
   return data;
-}
-
-//вийти з facebook
-export async function signOutWithFacebook() {
-  await supabase.auth.signInWithOAuth({
-    provider: "facebook",
-    options: {
-      redirectTo: `http://example.com/auth/callback`,
-    },
-  });
 }
 
 //зайти на google

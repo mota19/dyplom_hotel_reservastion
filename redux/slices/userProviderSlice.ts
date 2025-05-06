@@ -16,12 +16,19 @@ const userProviderSlice = createSlice({
       state.google = action.payload;
     },
     setFacebook(state, action: PayloadAction<boolean>) {
-      state.google = action.payload;
+      state.facebook = action.payload;
     },
     setDiscord(state, action: PayloadAction<boolean>) {
-      state.google = action.payload;
+      state.discord = action.payload;
+    },
+    resetProviders(state) {
+      state.google = false;
+      state.facebook = false;
+      state.discord = false;
     },
   },
 });
 
+export const { setGoogle, setFacebook, setDiscord, resetProviders } =
+  userProviderSlice.actions;
 export default userProviderSlice.reducer;

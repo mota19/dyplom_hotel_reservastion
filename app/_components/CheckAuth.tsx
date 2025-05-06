@@ -4,22 +4,52 @@ import { checkSession } from "../_supabase/apiUser";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "../_supabase/apiUser";
+import {
+  setGoogle,
+  setDiscord,
+  setFacebook,
+  resetProviders,
+} from "@/redux/slices/userProviderSlice";
+import { useAppDispatch } from "@/redux/hooks/hooks";
 
 const CheckAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     const verifySession = async () => {
-      const { data, error } = await checkSession(); // Викликаємо функцію перевірки сесії
+      const { data, error } = await checkSession();
+
       if (error) {
         console.error("Session check failed:", error);
-      } else {
-        setIsLoggedIn(!!data?.session); // Якщо є сесія, то користувач залогінений
+        return;
+      }
+
+      const session = data?.session;
+      const provider = session?.user?.app_metadata?.providers;
+
+      if (session) {
+        setIsLoggedIn(true);
+
+        dispatch(resetProviders());
+        provider.forEach((el: string) => {
+          if (el == "google") {
+            dispatch(setGoogle(true));
+          }
+          console.log(el);
+          if (el == "discord") {
+            dispatch(setDiscord(true));
+          }
+          if (el == "facebook") {
+            dispatch(setFacebook(true));
+          }
+        });
       }
     };
 
-    verifySession(); // Перевіряємо сесію після рендеру
-  }, []); // Порожній масив залежностей, щоб викликати один раз після рендеру
+    verifySession();
+  }, [dispatch]);
 
   const handleLogout = async () => {
     const { error } = await signOut();
