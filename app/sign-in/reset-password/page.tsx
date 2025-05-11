@@ -9,6 +9,7 @@ const ResetPassword: FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     recoverPassword(email);
+    
   };
 
   return (

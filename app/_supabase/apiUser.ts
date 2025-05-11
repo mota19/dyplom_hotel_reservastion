@@ -11,6 +11,8 @@ export async function postRegisterUser(email: string, password: string) {
     console.error(error);
   }
 
+
+
   return data;
 }
 
@@ -124,4 +126,12 @@ export async function signInWithDiscord() {
   }
 
   return data;
+}
+
+export async function getUser() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  return user;
 }

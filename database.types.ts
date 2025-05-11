@@ -31,6 +31,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           id: number
+          image: string | null
           latitude: number | null
           longitude: number | null
           name: string
@@ -45,6 +46,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: number
+          image?: string | null
           latitude?: number | null
           longitude?: number | null
           name: string
@@ -59,6 +61,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: number
+          image?: string | null
           latitude?: number | null
           longitude?: number | null
           name?: string
@@ -181,6 +184,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      users: {
+        Row: {
+          birthday: string | null
+          country: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone_number: string | null
+          role: string | null
+        }
+        Insert: {
+          birthday?: string | null
+          country?: string | null
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          phone_number?: string | null
+          role?: string | null
+        }
+        Update: {
+          birthday?: string | null
+          country?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone_number?: string | null
+          role?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {

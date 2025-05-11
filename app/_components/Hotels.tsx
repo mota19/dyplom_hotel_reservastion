@@ -31,6 +31,7 @@ const Hotels: FC = async () => {
               country={el.country}
               id={el.id}
               pricePerNight={el.pricePerNight}
+              image={el.image}
             />
           ))}
         </CarouselContent>

@@ -11,6 +11,7 @@ const PopularDestination: FC = async () => {
 
       <div className="grid h-[400px] grid-cols-4 grid-rows-2 gap-2 pb-10">
         {error && <div>some error</div>}
+
         {destinations?.map((item, index) => {
           const colSpan = "col-span-1";
           let rowSpan = "row-span-1";
@@ -29,7 +30,7 @@ const PopularDestination: FC = async () => {
               className={`relative overflow-hidden rounded-2xl ${colSpan} ${rowSpan} col-start-${colStart} `}
             >
               <Image
-                src="/image/Switzerland_Lake_Mountains_Houses_Engelberg_Lake_520074_1920x1080.jpg"
+                src={item.image || "/image/default.jpg"}
                 alt={item.country ?? "Unknown"}
                 layout="fill"
                 objectFit="cover"

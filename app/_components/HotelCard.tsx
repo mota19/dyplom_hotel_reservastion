@@ -2,6 +2,7 @@ import { FC } from "react";
 import Image from "next/image";
 import { CarouselItem } from "@/components/ui/carousel";
 import { PropPopularHotes } from "@/types/supabaseTypes";
+import Rating from "./Rating";
 
 const HotelCard: FC<PropPopularHotes> = ({
   name,
@@ -9,11 +10,12 @@ const HotelCard: FC<PropPopularHotes> = ({
   country,
   star_rating,
   pricePerNight,
+  image,
 }) => {
   return (
     <CarouselItem className="mb-5 h-auto cursor-pointer rounded-lg bg-white shadow-lg transition-shadow duration-300 hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)] md:basis-1/3 lg:basis-1/4">
       <Image
-        src="/image/Switzerland_Lake_Mountains_Houses_Engelberg_Lake_520074_1920x1080.jpg"
+        src={image || "/image/default.jpg"}
         alt="background-switherland"
         width={1440}
         height={300}
@@ -26,10 +28,7 @@ const HotelCard: FC<PropPopularHotes> = ({
         </p>
 
         <div className="flex items-center gap-2 text-sm">
-          <span className="rounded-md bg-blue-900 px-2 py-1 font-semibold text-white">
-            {star_rating}
-          </span>
-          <span className="text-black">Exceptional</span>
+          <Rating star_rating={star_rating} />
           <span className="text-gray-500">· 89 reviews</span>
         </div>
         <div className="mt-4 flex items-center justify-between">

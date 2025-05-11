@@ -8,7 +8,20 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 
-const accomodations = { type: ["hotels", "motels", "cabins"], img: [] };
+const accomodations = [
+  {
+    type: "hotels",
+    image: "/image/hotels.jpg",
+  },
+  {
+    type: "motels",
+    image: "/image/motels.jpg",
+  },
+  {
+    type: "cabins",
+    image: "/image/Cabins.jpg",
+  },
+];
 
 const BrowseByPropertyType: FC = () => {
   return (
@@ -21,20 +34,20 @@ const BrowseByPropertyType: FC = () => {
         className="w-full"
       >
         <CarouselContent>
-          {accomodations.type.map((el) => (
+          {accomodations.map(({ type, image }) => (
             <CarouselItem
-              key={el}
+              key={type}
               className="relative md:basis-1/2 lg:basis-1/3"
             >
               <Image
-                src="/image/Switzerland_Lake_Mountains_Houses_Engelberg_Lake_520074_1920x1080.jpg"
-                alt="background-switherland"
+                src={image}
+                alt={type}
                 width={1440}
                 height={300}
                 className="h-[300px] w-full rounded-4xl object-cover"
               />
               <span className="absolute bottom-4 left-8 rounded-full bg-white/80 px-3 py-1 text-sm">
-                {el}
+                {type}
               </span>
             </CarouselItem>
           ))}

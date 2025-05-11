@@ -5,6 +5,7 @@ export interface PropPopularHotes {
   country: string | null;
   star_rating: number | null;
   pricePerNight: number | null;
+  image: string | null;
 }
 
 export interface BookingSearch {

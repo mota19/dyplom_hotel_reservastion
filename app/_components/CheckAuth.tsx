@@ -37,7 +37,6 @@ const CheckAuth = () => {
           if (el == "google") {
             dispatch(setGoogle(true));
           }
-          console.log(el);
           if (el == "discord") {
             dispatch(setDiscord(true));
           }

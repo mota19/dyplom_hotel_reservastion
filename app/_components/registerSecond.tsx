@@ -7,9 +7,10 @@ import { useParams, useRouter } from "next/navigation";
 const RegisterSecond: FC = () => {
   const [fisrtName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
-  const [birthday, setBirthday] = useState<string>();
+  const [birthday, setBirthday] = useState<string>("");
   const [country, setCountry] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>();
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [role, setRole] = useState<"user" | "host">("user");
   const [errors, setErrors] = useState<{
     fisrtName?: string;
     lastName?: string;
@@ -23,7 +24,6 @@ const RegisterSecond: FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     const newErrors: {
       fisrtName?: string;
       lastName?: string;
@@ -165,6 +165,27 @@ const RegisterSecond: FC = () => {
           {errors.country && (
             <p className="mb-2 text-red-600">{errors.country}</p>
           )}
+          <label className="mb-2 justify-center text-[16px]">
+            Choose your role
+          </label>
+          <div className="mb-6 flex items-center justify-center gap-4">
+            {["user", "host"].map((option) => (
+              <label
+                key={option}
+                className={`w-full cursor-pointer rounded-lg border px-4 py-2 text-center text-sm font-medium transition-all duration-200 ${role === option ? "border-transparent bg-[#003465] text-white" : "border-gray-300 bg-white text-gray-700 hover:border-[#003465]"}`}
+              >
+                <input
+                  type="radio"
+                  name="role"
+                  value={option}
+                  checked={role === option}
+                  onChange={() => setRole(option as "user" | "host")}
+                  className="hidden"
+                />
+                {option === "user" ? "User" : "Host"}
+              </label>
+            ))}
+          </div>
           <div className="flex flex-row space-x-10">
             <button
               className="my-6 h-10 w-full cursor-pointer rounded-[8px] bg-[#003465] hover:opacity-80"
