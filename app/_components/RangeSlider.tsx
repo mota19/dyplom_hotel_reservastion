@@ -1,14 +1,17 @@
 "use client";
-import { useState } from "react";
+import { FC, useState } from "react";
 
-const RangeSlider = () => {
-  const [min, setMin] = useState(320);
-  const [max, setMax] = useState(5000);
+const RangeSlider: FC<{
+  min: number;
+  max: number;
+  setMin: (value: number) => void;
+  setMax: (value: number) => void;
+}> = ({ min, max, setMin, setMax }) => {
   const [inputMin, setInputMin] = useState(min);
   const [inputMax, setInputMax] = useState(max);
 
   const minLimit = 0;
-  const maxLimit = 5000;
+  const maxLimit = 1000;
 
   const handleRangeChange = (type: "min" | "max", value: number) => {
     const safeValue = Math.max(0, value);

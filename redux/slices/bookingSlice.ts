@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { BookingSearchArray } from "@/types/supabaseTypes";
+import { Accomodation } from "@/types/supabaseTypes";
 import { PayloadAction } from "@reduxjs/toolkit";
 
-const initialState: BookingSearchArray = [{ city: "" }];
+const initialState: Accomodation[] = [];
 
 const bookingSlice = createSlice({
   name: "booking",
   initialState,
   reducers: {
-    allBookingSearch(state, action: PayloadAction<BookingSearchArray | null>) {
+    allBookingSearch(state, action: PayloadAction<Accomodation[] | null>) {
       return action.payload ?? [];
     },
   },

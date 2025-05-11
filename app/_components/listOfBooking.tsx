@@ -11,6 +11,7 @@ const ListOfBooking: FC = () => {
   const outDate = useAppSelector((state) => state.info.outDate);
   const numberOfGuests = useAppSelector((state) => state.info.numberOfGuest);
   const validResults = data?.filter((el) => el.city !== "") ?? [];
+
   return (
     <div className="w-full p-8">
       <p className="text-gray-800">{validResults.length} search results for</p>
@@ -22,11 +23,20 @@ const ListOfBooking: FC = () => {
       </div>
 
       <div className="mt-2 flex flex-col gap-8">
-        {Array(10)
-          .fill(0)
-          .map((item, index) => {
-            return <BookingCard key={index} />;
-          })}
+        {data.map((item, index) => {
+          return (
+            <BookingCard
+              key={index}
+              id={item.id}
+              city={item.city}
+              name={item.name}
+              star_rating={item.star_rating}
+              country={item.country}
+              image={item.image}
+              pricePerNight={item.pricePerNight}
+            />
+          );
+        })}
       </div>
     </div>
   );

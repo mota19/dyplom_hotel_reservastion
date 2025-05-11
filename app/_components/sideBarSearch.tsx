@@ -29,11 +29,12 @@ const SideBarSearch: FC = () => {
   const [range, setRange] = useState<DateRange | undefined>();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const filters = useAppSelector((state) => state.filters);
 
   useEffect(() => {
-    if (!destination) return;
     (async function fetchData() {
-      const { data, error } = await getBookingSearch(destination);
+      const { data, error } = await getBookingSearch(destination, filters);
+
       if (error) {
         console.error(error);
       } else {
@@ -41,7 +42,7 @@ const SideBarSearch: FC = () => {
         dispatch(setCity(destination));
       }
     })();
-  }, [destination, dispatch]);
+  }, [destination, dispatch, filters]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -78,7 +79,6 @@ const SideBarSearch: FC = () => {
               setInputValue(e.target.value)
             }
             value={inputValue}
-            required
           />
           <Image
             src={Destination}
@@ -110,7 +110,6 @@ const SideBarSearch: FC = () => {
               }
             }}
             value={gueests}
-            required
           />
           <Image
             src={Man}

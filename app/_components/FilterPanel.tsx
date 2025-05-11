@@ -1,7 +1,8 @@
 "use client";
-
-import React, { useState } from "react";
-import { FilterCategory, Filters } from "@/types/filters";
+import { useState, FC } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
+import { FilterCategory } from "@/types/filters";
+import { toggleFilter } from "@/redux/slices/filterSlice";
 import RangeSlider from "./RangeSlider";
 
 const popularOptions = [
@@ -18,30 +19,21 @@ const priceOptions = [
   "$150 and more",
 ];
 
-const ratingOptions = ["Any", "Excellent", "Very good", "Good"];
+const ratingOptions = ["Any", "Excellent", "Very good", "Good", "Fair", "Poor"];
 
-const FilterPanel: React.FC = () => {
-  const [filters, setFilters] = useState<Filters>({
-    popular: [],
-    price: [],
-    rating: [],
-  });
+const types = ["Hotel", "Motel", "Cabin"];
+
+const FilterPanel: FC = () => {
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(1000);
+  const dispatch = useAppDispatch();
+  const filters = useAppSelector((state) => state.filters);
 
   const handleCheckboxChange = (
     category: FilterCategory,
     value: string,
   ): void => {
-    setFilters((prev) => {
-      const isChecked = prev[category].includes(value);
-      const updatedCategory = isChecked
-        ? prev[category].filter((item) => item !== value)
-        : [...prev[category], value];
-
-      return {
-        ...prev,
-        [category]: updatedCategory,
-      };
-    });
+    dispatch(toggleFilter({ category, value }));
   };
 
   return (
@@ -75,7 +67,9 @@ const FilterPanel: React.FC = () => {
           </label>
         ))}
       </div>
-      <RangeSlider />
+
+      <RangeSlider min={min} max={max} setMax={setMax} setMin={setMin} />
+
       <div>
         <h3 className="mt-2 text-2xl font-semibold">Guest rating</h3>
         {ratingOptions.map((label) => (
@@ -84,6 +78,21 @@ const FilterPanel: React.FC = () => {
               type="checkbox"
               checked={filters.rating.includes(label)}
               onChange={() => handleCheckboxChange("rating", label)}
+              className="mr-2 cursor-pointer"
+            />
+            {label}
+          </label>
+        ))}
+      </div>
+
+      <div>
+        <h3 className="mt-2 text-2xl font-semibold">Type of accommodation</h3>
+        {types.map((label) => (
+          <label key={label} className="flex cursor-pointer items-center">
+            <input
+              type="checkbox"
+              checked={filters.types.includes(label)}
+              onChange={() => handleCheckboxChange("types", label)}
               className="mr-2 cursor-pointer"
             />
             {label}

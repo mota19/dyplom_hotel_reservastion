@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 // Функція, яка повертає текст і колір залежно від рейтингу
-const getRatingText = (star_rating: number) => {
+export const getRatingText = (star_rating: number) => {
   if (star_rating >= 9) {
     return {
       text: "Exceptional",

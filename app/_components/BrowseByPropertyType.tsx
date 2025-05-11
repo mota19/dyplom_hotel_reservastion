@@ -1,3 +1,4 @@
+"use client";
 import { FC } from "react";
 import {
   Carousel,
@@ -7,23 +8,34 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { updateTypes } from "@/redux/slices/filterSlice";
+import { useAppDispatch } from "@/redux/hooks/hooks";
 
 const accomodations = [
   {
-    type: "hotels",
+    type: "Hotel",
     image: "/image/hotels.jpg",
   },
   {
-    type: "motels",
+    type: "Motel",
     image: "/image/motels.jpg",
   },
   {
-    type: "cabins",
+    type: "Cabin",
     image: "/image/Cabins.jpg",
   },
 ];
 
 const BrowseByPropertyType: FC = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const handleClick = (key: string) => {
+    router.push(`/booking`);
+    dispatch(updateTypes({ types: [key] }));
+  };
+
   return (
     <div className="mb-8 px-8">
       <h2 className="mb-4 text-2xl font-semibold">Browse by property type</h2>
@@ -38,6 +50,7 @@ const BrowseByPropertyType: FC = () => {
             <CarouselItem
               key={type}
               className="relative md:basis-1/2 lg:basis-1/3"
+              onClick={() => handleClick(type)}
             >
               <Image
                 src={image}

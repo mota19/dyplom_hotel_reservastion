@@ -1,6 +1,6 @@
 import { FC } from "react";
-import Image from "next/image";
 import { getPopularDestinations } from "../_supabase/hotelApi";
+import PopularDestinationItem from "./PopularDestinationItem";
 
 const PopularDestination: FC = async () => {
   const { data: destinations, error } = await getPopularDestinations();
@@ -25,20 +25,14 @@ const PopularDestination: FC = async () => {
           }
 
           return (
-            <div
+            <PopularDestinationItem
               key={index}
-              className={`relative overflow-hidden rounded-2xl ${colSpan} ${rowSpan} col-start-${colStart} `}
-            >
-              <Image
-                src={item.image || "/image/default.jpg"}
-                alt={item.country ?? "Unknown"}
-                layout="fill"
-                objectFit="cover"
-              />
-              <span className="absolute bottom-2 left-2 rounded-full bg-white/80 px-3 py-1 text-sm">
-                {item.country ?? "-"}
-              </span>
-            </div>
+              country={item.country}
+              image={item.image}
+              colSpan={colSpan}
+              rowSpan={rowSpan}
+              colStart={colStart}
+            />
           );
         })}
       </div>

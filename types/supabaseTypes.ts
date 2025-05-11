@@ -8,12 +8,6 @@ export interface PropPopularHotes {
   image: string | null;
 }
 
-export interface BookingSearch {
-  city: string | null;
-}
-
-export type BookingSearchArray = BookingSearch[] | null;
-
 export interface infoAboutBookingProp {
   destination: string;
   inDate: string;
@@ -26,3 +20,19 @@ export interface IuserProviderState {
   facebook: boolean;
   discord: boolean;
 }
+
+export type Accomodation = {
+  city?: string | null;
+  country?: string | null;
+  created_at?: string | null;
+  description?: string | null;
+  id: number;
+  image: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  name?: string;
+  pricePerNight?: number | null;
+  star_rating?: number | null;
+  type_id?: number;
+  updated_at?: string | null;
+};
