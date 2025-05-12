@@ -30,45 +30,54 @@ export type Database = {
           country: string | null
           created_at: string | null
           description: string | null
+          discount: number | null
           id: number
           image: string | null
           latitude: number | null
           longitude: number | null
+          maxCapacity: number | null
           name: string
           pricePerNight: number | null
           star_rating: number | null
           type_id: number
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           city?: string | null
           country?: string | null
           created_at?: string | null
           description?: string | null
+          discount?: number | null
           id?: number
           image?: string | null
           latitude?: number | null
           longitude?: number | null
+          maxCapacity?: number | null
           name: string
           pricePerNight?: number | null
           star_rating?: number | null
           type_id: number
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           city?: string | null
           country?: string | null
           created_at?: string | null
           description?: string | null
+          discount?: number | null
           id?: number
           image?: string | null
           latitude?: number | null
           longitude?: number | null
+          maxCapacity?: number | null
           name?: string
           pricePerNight?: number | null
           star_rating?: number | null
           type_id?: number
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -78,109 +87,11 @@ export type Database = {
             referencedRelation: "accommodation_types"
             referencedColumns: ["id"]
           },
-        ]
-      }
-      cabins: {
-        Row: {
-          amenities: string | null
-          cabin_size: string | null
-          created_at: string | null
-          id: number
-          number_of_beds: number | null
-          updated_at: string | null
-        }
-        Insert: {
-          amenities?: string | null
-          cabin_size?: string | null
-          created_at?: string | null
-          id: number
-          number_of_beds?: number | null
-          updated_at?: string | null
-        }
-        Update: {
-          amenities?: string | null
-          cabin_size?: string | null
-          created_at?: string | null
-          id?: number
-          number_of_beds?: number | null
-          updated_at?: string | null
-        }
-        Relationships: [
           {
-            foreignKeyName: "cabins_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "accommodations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      hotels: {
-        Row: {
-          created_at: string | null
-          has_gym: boolean | null
-          has_swimming_pool: boolean | null
-          id: number
-          restaurant_name: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          has_gym?: boolean | null
-          has_swimming_pool?: boolean | null
-          id: number
-          restaurant_name?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          has_gym?: boolean | null
-          has_swimming_pool?: boolean | null
-          id?: number
-          restaurant_name?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "hotels_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "accommodations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      motels: {
-        Row: {
-          created_at: string | null
-          has_parking: boolean | null
-          has_pet_friendly: boolean | null
-          has_wifi: boolean | null
-          id: number
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          has_parking?: boolean | null
-          has_pet_friendly?: boolean | null
-          has_wifi?: boolean | null
-          id: number
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          has_parking?: boolean | null
-          has_pet_friendly?: boolean | null
-          has_wifi?: boolean | null
-          id?: number
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "motels_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "accommodations"
+            foreignKeyName: "fk_user"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -192,7 +103,9 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          nationality: string | null
           phone_number: string | null
+          profile_image: string | null
           role: string | null
         }
         Insert: {
@@ -201,7 +114,9 @@ export type Database = {
           first_name?: string | null
           id: string
           last_name?: string | null
+          nationality?: string | null
           phone_number?: string | null
+          profile_image?: string | null
           role?: string | null
         }
         Update: {
@@ -210,7 +125,9 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          nationality?: string | null
           phone_number?: string | null
+          profile_image?: string | null
           role?: string | null
         }
         Relationships: []

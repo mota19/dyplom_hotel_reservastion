@@ -10,7 +10,7 @@ const Header: FC = () => {
         <nav className="ml-[100px] flex space-x-8 text-2xl">
           <Link href="/">Home</Link>
           <Link href="/booking">Booking</Link>
-          <Link href="#">About</Link>
+          <Link href="/about">About</Link>
           <Link href="/profile">Profile</Link>
         </nav>
       </div>

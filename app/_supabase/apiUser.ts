@@ -11,8 +11,6 @@ export async function postRegisterUser(email: string, password: string) {
     console.error(error);
   }
 
-
-
   return data;
 }
 
@@ -134,4 +132,16 @@ export async function getUser() {
   } = await supabase.auth.getUser();
 
   return user;
+}
+
+export async function getProfileImage(id: string) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("profile_image")
+    .eq("id", id)
+    .single(); // <- ми очікуємо лише один рядок
+
+  if (error || !data) return { data: null, error };
+
+  return { data: data.profile_image, error: null };
 }

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { checkSession } from "../_supabase/apiUser";
+import { checkSession, getUser, getProfileImage } from "../_supabase/apiUser";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "../_supabase/apiUser";
@@ -14,6 +14,9 @@ import { useAppDispatch } from "@/redux/hooks/hooks";
 
 const CheckAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | null>(
+    "/images/default.jpg",
+  );
 
   const dispatch = useAppDispatch();
 
@@ -24,6 +27,13 @@ const CheckAuth = () => {
       if (error) {
         console.error("Session check failed:", error);
         return;
+      }
+
+      const userId = await getUser();
+
+      if (userId !== null) {
+        const profileImage = await getProfileImage(userId.id);
+        setProfileImage(profileImage.data);
       }
 
       const session = data?.session;
@@ -64,11 +74,11 @@ const CheckAuth = () => {
       {isLoggedIn ? (
         <>
           <Image
-            src="/image/Switzerland_Lake_Mountains_Houses_Engelberg_Lake_520074_1920x1080.jpg"
+            src={profileImage || "/image/default.jpg"}
             alt="profile"
             width={56}
             height={56}
-            className="rounded-full"
+            className="h-14 w-14 rounded-full"
           ></Image>
           <button
             onClick={handleLogout}

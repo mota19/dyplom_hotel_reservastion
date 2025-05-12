@@ -40,7 +40,7 @@ export async function getBookingSearch(city: string, filters: Filters) {
 
   console.log(popular);
 
-  if (country && country[0].trim() !== "") {
+  if (country.length > 0 && country[0].trim() !== "") {
     query = query.ilike("country", `${country}%`);
   }
 

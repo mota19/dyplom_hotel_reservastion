@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { updateTypes } from "@/redux/slices/filterSlice";
+import { updateTypes, updateCountry } from "@/redux/slices/filterSlice";
 import { useAppDispatch } from "@/redux/hooks/hooks";
 
 const accomodations = [
@@ -34,6 +34,7 @@ const BrowseByPropertyType: FC = () => {
   const handleClick = (key: string) => {
     router.push(`/booking`);
     dispatch(updateTypes({ types: [key] }));
+    dispatch(updateCountry({ country: [] }));
   };
 
   return (
