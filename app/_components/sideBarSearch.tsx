@@ -91,8 +91,11 @@ const SideBarSearch: FC = () => {
       </div>
       <div className="flex flex-col">
         <label htmlFor="oo">Check-in-date</label>
-        <div className="relative w-[400px]">
-          <DateRangePicker onDateChange={setRange}></DateRangePicker>
+        <div className="relative w-full">
+          <DateRangePicker
+            onDateChange={setRange}
+            width="full"
+          ></DateRangePicker>
         </div>
       </div>
 

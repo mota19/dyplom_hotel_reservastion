@@ -6,6 +6,8 @@ const initialState: IuserProviderState = {
   google: false,
   facebook: false,
   discord: false,
+  email: "",
+  profileImage: "",
 };
 
 const userProviderSlice = createSlice({
@@ -21,6 +23,12 @@ const userProviderSlice = createSlice({
     setDiscord(state, action: PayloadAction<boolean>) {
       state.discord = action.payload;
     },
+    setEmail(state, action: PayloadAction<string>) {
+      state.email = action.payload;
+    },
+    setProfileImageRedux(state, action: PayloadAction<string>) {
+      state.profileImage = action.payload;
+    },
     resetProviders(state) {
       state.google = false;
       state.facebook = false;
@@ -29,6 +37,12 @@ const userProviderSlice = createSlice({
   },
 });
 
-export const { setGoogle, setFacebook, setDiscord, resetProviders } =
-  userProviderSlice.actions;
+export const {
+  setGoogle,
+  setFacebook,
+  setDiscord,
+  setEmail,
+  resetProviders,
+  setProfileImageRedux,
+} = userProviderSlice.actions;
 export default userProviderSlice.reducer;

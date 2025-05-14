@@ -19,6 +19,8 @@ export interface IuserProviderState {
   google: boolean;
   facebook: boolean;
   discord: boolean;
+  email?: string;
+  profileImage?: string | null;
 }
 
 export type Accomodation = {
@@ -35,4 +37,16 @@ export type Accomodation = {
   star_rating?: number | null;
   type_id?: number;
   updated_at?: string | null;
+};
+
+export type User = {
+  birthday: string | null;
+  country: string | null;
+  first_name: string | null;
+  id: string;
+  last_name: string | null;
+  nationality: string | null;
+  phone_number: string | null;
+  profile_image: string | null;
+  role: string | null;
 };

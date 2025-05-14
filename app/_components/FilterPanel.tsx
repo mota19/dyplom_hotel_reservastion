@@ -5,11 +5,21 @@ import { FilterCategory } from "@/types/filters";
 import { toggleFilter } from "@/redux/slices/filterSlice";
 import RangeSlider from "./RangeSlider";
 
-const popularOptions = [
-  "Budget hotel",
+const amenities = [
+  "Wi-Fi",
+  "Air conditioning",
+  "TV",
+  "Washer",
+  "Dryer",
+  "Kitchen",
+  "Free parking",
+  "Gym",
+  "Pool",
+  "Pet-friendly",
   "Breakfast included",
-  "Free airport shuttle",
-  "Hostel/Backpacker",
+  "Workspace",
+  "Elevator",
+  "Heating",
 ];
 
 const priceOptions = [
@@ -38,21 +48,6 @@ const FilterPanel: FC = () => {
 
   return (
     <div className="my-4 space-y-6 px-8">
-      <div>
-        <h3 className="mt-2 text-2xl font-semibold">Popular filters</h3>
-        {popularOptions.map((label) => (
-          <label key={label} className="flex cursor-pointer items-center">
-            <input
-              type="checkbox"
-              checked={filters.popular.includes(label)}
-              onChange={() => handleCheckboxChange("popular", label)}
-              className="mr-2 cursor-pointer"
-            />
-            {label}
-          </label>
-        ))}
-      </div>
-
       <div>
         <h3 className="mt-2 text-2xl font-semibold">Price per night</h3>
         {priceOptions.map((label) => (
@@ -93,6 +88,20 @@ const FilterPanel: FC = () => {
               type="checkbox"
               checked={filters.types.includes(label)}
               onChange={() => handleCheckboxChange("types", label)}
+              className="mr-2 cursor-pointer"
+            />
+            {label}
+          </label>
+        ))}
+      </div>
+      <div>
+        <h3 className="mt-2 text-2xl font-semibold">Amenities</h3>
+        {amenities.map((label) => (
+          <label key={label} className="flex cursor-pointer items-center">
+            <input
+              type="checkbox"
+              checked={filters.popular.includes(label)}
+              onChange={() => handleCheckboxChange("popular", label)}
               className="mr-2 cursor-pointer"
             />
             {label}

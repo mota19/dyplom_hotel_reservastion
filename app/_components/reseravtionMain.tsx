@@ -63,7 +63,10 @@ const ReservationMain: FC = () => {
             <label className="px-2 font-semibold text-gray-700">
               Chek-in/Check-out
             </label>
-            <DateRangePicker onDateChange={setRange}></DateRangePicker>
+            <DateRangePicker
+              onDateChange={setRange}
+              width="[260px]"
+            ></DateRangePicker>
           </div>
 
           <div className="flex flex-col justify-center">

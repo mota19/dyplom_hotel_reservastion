@@ -14,8 +14,10 @@ import { CalendarIcon } from "lucide-react";
 
 export function DateRangePicker({
   onDateChange,
+  width,
 }: {
   onDateChange: (date: DateRange | undefined) => void;
+  width: string;
 }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<DateRange | undefined>({
@@ -34,8 +36,7 @@ export function DateRangePicker({
         <Button
           variant="outline"
           className={cn(
-            "w-[260px] justify-start border-none text-left font-normal",
-            !date && "text-muted-foreground",
+            `w-${width} font-normal", !date && "text-muted-foreground justify-start border-none text-left`,
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />

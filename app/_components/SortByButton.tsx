@@ -1,6 +1,8 @@
 "use client";
 import { FC, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useAppDispatch } from "@/redux/hooks/hooks";
+import { sortByPrice, sortByRating } from "@/redux/slices/bookingSlice";
 
 type SortKey = "price" | "rating" | "distance";
 type SortDirection = "asc" | "desc";
@@ -10,17 +12,33 @@ const SortDropdown: FC = () => {
   const [sortBy, setSortBy] = useState<SortKey>("price");
   const [direction, setDirection] = useState<SortDirection>("asc");
 
+  const dispatch = useAppDispatch();
+
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
   };
 
   const handleSelect = (key: SortKey) => {
     if (sortBy === key) {
-      setDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+      const newDirection = direction === "asc" ? "desc" : "asc";
+      setDirection(newDirection);
+
+      if (key === "price") {
+        dispatch(sortByPrice(newDirection));
+      } else if (key === "rating") {
+        dispatch(sortByRating(newDirection));
+      }
     } else {
       setSortBy(key);
       setDirection("asc");
+
+      if (key === "price") {
+        dispatch(sortByPrice("asc"));
+      } else if (key === "rating") {
+        dispatch(sortByRating("asc"));
+      }
     }
+
     setIsOpen(false);
   };
 
@@ -49,7 +67,7 @@ const SortDropdown: FC = () => {
 
       {isOpen && (
         <div className="absolute right-0 z-10 mt-2 w-48 rounded-md border border-gray-200 bg-white shadow-md">
-          {(["price", "rating", "distance"] as SortKey[]).map((key) => (
+          {(["price", "rating"] as SortKey[]).map((key) => (
             <button
               key={key}
               onClick={() => handleSelect(key)}

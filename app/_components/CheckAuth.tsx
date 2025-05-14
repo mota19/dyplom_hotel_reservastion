@@ -9,6 +9,8 @@ import {
   setDiscord,
   setFacebook,
   resetProviders,
+  setEmail,
+  setProfileImageRedux,
 } from "@/redux/slices/userProviderSlice";
 import { useAppDispatch } from "@/redux/hooks/hooks";
 
@@ -32,8 +34,10 @@ const CheckAuth = () => {
       const userId = await getUser();
 
       if (userId !== null) {
+        document.cookie = `userId=${userId.id}; path=/; max-age=604800`;
         const profileImage = await getProfileImage(userId.id);
         setProfileImage(profileImage.data);
+        dispatch(setProfileImageRedux(profileImage.data!));
       }
 
       const session = data?.session;
@@ -52,6 +56,9 @@ const CheckAuth = () => {
           }
           if (el == "facebook") {
             dispatch(setFacebook(true));
+          }
+          if (el == "email") {
+            dispatch(setEmail(session?.user.email ?? ""));
           }
         });
       }

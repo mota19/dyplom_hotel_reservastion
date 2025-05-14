@@ -32,7 +32,7 @@ const ProfileOauthButtons: FC = () => {
           }
         }}
       >
-        <span className="mr-2">{googleAuth ? "Log out" : "Sign in"}</span>
+        <span className="mr-2">{googleAuth ? "Logged in" : "Sign in"}</span>
         <Image src={google} alt="google" width={16} height={16} />
       </button>
 
@@ -49,7 +49,7 @@ const ProfileOauthButtons: FC = () => {
           }
         }}
       >
-        <span className="mr-2">{discordAuth ? "Log out" : "Sign in"}</span>
+        <span className="mr-2">{discordAuth ? "Logged in" : "Sign in"}</span>
         <Image src={discord} alt="discord" width={16} height={16} />
       </button>
 
@@ -66,7 +66,7 @@ const ProfileOauthButtons: FC = () => {
           }
         }}
       >
-        <span className="mr-2">{facebookAuth ? "Log out" : "Sign in"}</span>
+        <span className="mr-2">{facebookAuth ? "Logged in" : "Sign in"}</span>
         <Image src={facebook} alt="facebook" width={16} height={16} />
       </button>
     </div>

@@ -90,6 +90,8 @@ export async function signOut() {
     console.error(error);
   }
 
+  document.cookie = "userId=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
   return { error };
 }
 
@@ -144,4 +146,23 @@ export async function getProfileImage(id: string) {
   if (error || !data) return { data: null, error };
 
   return { data: data.profile_image, error: null };
+}
+
+export async function getAllInfoProfile(id: string) {
+  const { data, error } = await supabase.from("users").select("*").eq("id", id);
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}
+
+export function getCookie(name: string): string | null {
+  const matches = document.cookie.match(
+    new RegExp(
+      // шукаємо щось типу "userId=123"
+      "(?:^|; )" +
+        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+        "=([^;]*)",
+    ),
+  );
+  return matches ? decodeURIComponent(matches[1]) : null;
 }
