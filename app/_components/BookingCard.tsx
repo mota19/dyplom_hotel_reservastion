@@ -9,11 +9,15 @@ const BookingCard: FC<Accomodation> = ({
   pricePerNight,
   image,
   star_rating,
+  onClick,
 }) => {
   const { text, color } = getRatingText(star_rating!);
 
   return (
-    <div className="box-content flex h-[200px] rounded-2xl p-4 shadow-[0px_10px_50px_rgba(0,0,0,0.25)]">
+    <div
+      className="box-content flex h-[200px] rounded-2xl p-4 shadow-[0px_10px_50px_rgba(0,0,0,0.25)]"
+      onClick={onClick}
+    >
       <Image
         src={image || "/image/default.jpg"}
         alt="background-switherland"

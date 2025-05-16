@@ -3,6 +3,7 @@ import { FC, useState } from "react";
 import BookingCard from "./BookingCard";
 import SortByButton from "./SortByButton";
 import { useAppSelector } from "@/redux/hooks/hooks";
+import { useRouter } from "next/navigation";
 
 const ListOfBooking: FC = () => {
   const data = useAppSelector((state) => state.booking);
@@ -10,6 +11,8 @@ const ListOfBooking: FC = () => {
   const inDate = useAppSelector((state) => state.info.inDate);
   const outDate = useAppSelector((state) => state.info.outDate);
   const numberOfGuests = useAppSelector((state) => state.info.numberOfGuest);
+
+  const router = useRouter();
 
   const validResults = data?.filter((el) => el.city !== "") ?? [];
 
@@ -61,9 +64,9 @@ const ListOfBooking: FC = () => {
       </div>
 
       <div className="mt-2 flex flex-col gap-8">
-        {paginatedData.map((item, index) => (
+        {paginatedData.map((item) => (
           <BookingCard
-            key={index}
+            key={item.id}
             id={item.id}
             city={item.city}
             name={item.name}
@@ -71,6 +74,7 @@ const ListOfBooking: FC = () => {
             country={item.country}
             image={item.image}
             pricePerNight={item.pricePerNight}
+            onClick={() => router.push(`/booking/${item.id}`)}
           />
         ))}
       </div>

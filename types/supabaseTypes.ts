@@ -37,6 +37,7 @@ export type Accomodation = {
   star_rating?: number | null;
   type_id?: number;
   updated_at?: string | null;
+  onClick?: () => void;
 };
 
 export type User = {
