@@ -15,13 +15,14 @@ const PopularDestination: FC = async () => {
         {destinations?.map((item, index) => {
           const colSpan = "col-span-1";
           let rowSpan = "row-span-1";
-          let colStart = 1;
+          const colStart: number | undefined = undefined;
 
-          if (index % 3 === 0) {
+          if (index === 0) {
             rowSpan = "row-span-2";
-          } else if (index === 1 || index === 2) {
-            rowSpan = "row-span-1";
-            colStart = 1;
+          }
+
+          if (index === destinations.length - 3) {
+            rowSpan = "row-span-2";
           }
 
           return (
