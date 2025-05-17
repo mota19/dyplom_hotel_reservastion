@@ -13,6 +13,7 @@ const Header: FC = () => {
           <Link href="/about">About</Link>
           <Link href="/profile">Profile</Link>
         </nav>
+        <Link href="/admin/dashboard">Admin</Link>
       </div>
       <CheckAuth></CheckAuth>
     </header>
