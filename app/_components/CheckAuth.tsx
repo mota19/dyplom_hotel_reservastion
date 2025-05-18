@@ -1,6 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { checkSession, getUser, getProfileImage } from "../_supabase/apiUser";
+import {
+  checkSession,
+  getUser,
+  getProfileImage,
+  userGetRole,
+} from "../_supabase/apiUser";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "../_supabase/apiUser";
@@ -19,6 +24,7 @@ const CheckAuth = () => {
   const [profileImage, setProfileImage] = useState<string | null>(
     "/images/default.jpg",
   );
+  const [role, setRole] = useState<"user" | "host">("user");
 
   const dispatch = useAppDispatch();
 
@@ -36,6 +42,10 @@ const CheckAuth = () => {
       if (userId !== null) {
         document.cookie = `userId=${userId.id}; path=/; max-age=604800`;
         const profileImage = await getProfileImage(userId.id);
+        const { data } = await userGetRole(userId.id);
+        if (data?.role === "user" || data?.role === "host") {
+          setRole(data.role);
+        }
         setProfileImage(profileImage.data);
         dispatch(setProfileImageRedux(profileImage.data!));
       }
@@ -93,6 +103,14 @@ const CheckAuth = () => {
           >
             Log out
           </button>
+          {role === "host" && (
+            <Link
+              href="/admin/dashboard"
+              className="w-[100px] cursor-pointer rounded-[24px] bg-red-600 p-4 text-center text-[16px] text-white"
+            >
+              Admin
+            </Link>
+          )}
         </>
       ) : (
         <>

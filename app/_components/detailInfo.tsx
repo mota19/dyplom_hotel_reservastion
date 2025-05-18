@@ -3,6 +3,13 @@ import { FC } from "react";
 import Image from "next/image";
 import Arrow from "@/public/svg/reshot-icon-arrow-diagonal-up-right-Y2ND6FM3RW.svg";
 import conn from "@/public/image/hotels.jpg";
+import room1 from "@/public/image/pic (1).jpg";
+import room2 from "@/public/image/pic (2).jpg";
+import room3 from "@/public/image/pic (3).jpg";
+import room4 from "@/public/image/pic (4).jpg";
+import zuric from "@/public/image/hotel-zurich.jpg";
+import zuric2 from "@/public/image/zuric2.jpg";
+
 import { useRouter } from "next/navigation";
 import { getRatingText } from "./Rating";
 import {
@@ -17,6 +24,41 @@ const DetailInfo: FC = () => {
   const router = useRouter();
 
   const { text, color } = getRatingText(9!);
+
+  const roomImages = [
+    {
+      src: room1,
+      title: "Deluxe Room",
+      area: "25 m²",
+      capacity: "2 People",
+      bedSize: "Queen Bed",
+      price: "120$",
+    },
+    {
+      src: room2,
+      title: "Family Suite",
+      area: "30 m²",
+      capacity: "3 People",
+      bedSize: "King Bed",
+      price: "150$",
+    },
+    {
+      src: room3,
+      title: "Single Room",
+      area: "20 m²",
+      capacity: "1 Person",
+      bedSize: "Single Bed",
+      price: "80$",
+    },
+    {
+      src: room4,
+      title: "Executive Suite",
+      area: "35 m²",
+      capacity: "4 People",
+      bedSize: "2 Queen Beds",
+      price: "200$",
+    },
+  ];
 
   return (
     <div>
@@ -34,12 +76,12 @@ const DetailInfo: FC = () => {
       <div className="mt-4 flex-col">
         <div className="grid grid-cols-2 grid-rows-2 gap-4">
           <Image
-            src={conn}
+            src={zuric}
             alt="hotel large"
             className="col-start-1 col-end-2 row-start-1 row-end-3 h-[500px] w-full rounded-2xl object-cover"
           />
           <Image
-            src={conn}
+            src={zuric2}
             alt="hotel small 1"
             className="col-start-2 row-start-1 h-[245px] w-full rounded-2xl object-cover"
           />
@@ -97,19 +139,22 @@ const DetailInfo: FC = () => {
               Pool & Spa
             </span>
             <span className="rounded-full bg-gray-100 px-4 py-2">
-              Pool & Spa
+              Fitness Center
             </span>
             <span className="rounded-full bg-gray-100 px-4 py-2">
-              Pool & Spa
+              Pet Friendly
             </span>
             <span className="rounded-full bg-gray-100 px-4 py-2">
-              Pool & Spa
+              Room Service
             </span>
             <span className="rounded-full bg-gray-100 px-4 py-2">
-              Pool & Spa
+              Laundry Service
             </span>
             <span className="rounded-full bg-gray-100 px-4 py-2">
-              Pool & Spa
+              Non-smoking Rooms
+            </span>
+            <span className="rounded-full bg-gray-100 px-4 py-2">
+              Business Center
             </span>
           </div>
           <h3 className="mt-8 text-2xl font-semibold">Rooms</h3>
@@ -120,11 +165,17 @@ const DetailInfo: FC = () => {
             className="mb-4 w-full"
           >
             <CarouselContent className="flex">
-              {Array(10)
-                .fill(null)
-                .map((el, index) => (
-                  <RoomsCard key={index} />
-                ))}
+              {roomImages.map((room, index) => (
+                <RoomsCard
+                  key={index}
+                  image={room.src}
+                  title={room.title}
+                  area={room.area}
+                  capacity={room.capacity}
+                  bedSize={room.bedSize}
+                  price={room.price}
+                />
+              ))}
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />

@@ -165,8 +165,6 @@ export async function updateUserInfo(user: User) {
     .update(rest)
     .eq("id", id);
 
-  console.log(data);
-
   if (error || !data) return { data: null, error };
 
   return { data, error: null };
@@ -200,6 +198,17 @@ export const uploadProfileImage = async (file: File, userId: string) => {
 
   return publicUrl;
 };
+
+export async function userGetRole(id: string) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("role")
+    .eq("id", id)
+    .single();
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}
 
 export function getCookie(name: string): string | null {
   const matches = document.cookie.match(
