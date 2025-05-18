@@ -21,6 +21,7 @@ export interface IuserProviderState {
   discord: boolean;
   email?: string;
   profileImage?: string | null;
+  fileImage?: File | null;
 }
 
 export type Accomodation = {

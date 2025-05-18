@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { User } from "@/types/supabaseTypes";
 
 //реєстрація користувача
 export async function postRegisterUser(email: string, password: string) {
@@ -136,12 +137,13 @@ export async function getUser() {
   return user;
 }
 
+//Отримати фотограійї користувача
 export async function getProfileImage(id: string) {
   const { data, error } = await supabase
     .from("users")
     .select("profile_image")
     .eq("id", id)
-    .single(); // <- ми очікуємо лише один рядок
+    .single();
 
   if (error || !data) return { data: null, error };
 
@@ -154,6 +156,50 @@ export async function getAllInfoProfile(id: string) {
 
   return { data, error: null };
 }
+
+export async function updateUserInfo(user: User) {
+  const { id, ...rest } = user;
+
+  const { data, error } = await supabase
+    .from("users")
+    .update(rest)
+    .eq("id", id);
+
+  console.log(data);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}
+
+export const uploadProfileImage = async (file: File, userId: string) => {
+  // Завантаження файлу
+  const { error: uploadError } = await supabase.storage
+    .from("profile")
+    .upload(`avatar.png`, file, {
+      cacheControl: "3600",
+      upsert: true,
+    });
+
+  if (uploadError) throw uploadError;
+
+  // Отримання публічного посилання
+  const { data: urlData } = supabase.storage
+    .from("profile")
+    .getPublicUrl(`/avatar.png`);
+
+  const publicUrl = urlData.publicUrl;
+
+  // Оновлення поля у таблиці "users"
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({ profile_image: publicUrl })
+    .eq("id", userId);
+
+  if (updateError) throw updateError;
+
+  return publicUrl;
+};
 
 export function getCookie(name: string): string | null {
   const matches = document.cookie.match(

@@ -8,6 +8,7 @@ const initialState: IuserProviderState = {
   discord: false,
   email: "",
   profileImage: "",
+  fileImage: null,
 };
 
 const userProviderSlice = createSlice({
@@ -29,6 +30,9 @@ const userProviderSlice = createSlice({
     setProfileImageRedux(state, action: PayloadAction<string>) {
       state.profileImage = action.payload;
     },
+    setFileImage(state, action: PayloadAction<File>) {
+      state.fileImage = action.payload;
+    },
     resetProviders(state) {
       state.google = false;
       state.facebook = false;
@@ -44,5 +48,6 @@ export const {
   setEmail,
   resetProviders,
   setProfileImageRedux,
+  setFileImage,
 } = userProviderSlice.actions;
 export default userProviderSlice.reducer;

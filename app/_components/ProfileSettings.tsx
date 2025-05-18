@@ -1,8 +1,16 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import ProfileOauthButtons from "./ProfileOuathButtons";
-import { getAllInfoProfile, getCookie } from "../_supabase/apiUser";
+import {
+  getAllInfoProfile,
+  getCookie,
+  uploadProfileImage,
+} from "../_supabase/apiUser";
 import { User } from "@/types/supabaseTypes";
+import { useAppSelector } from "@/redux/hooks/hooks";
+import { updateUserInfo } from "../_supabase/apiUser";
+import { useAppDispatch } from "@/redux/hooks/hooks";
+import { isSave } from "@/redux/slices/profileSettings";
 
 const ProfileSettings: FC = () => {
   const [formData, setFormData] = useState<User | null>({
@@ -16,6 +24,17 @@ const ProfileSettings: FC = () => {
     id: "",
     profile_image: "",
   });
+  const dispatch = useAppDispatch();
+
+  const isSaved = useAppSelector((state) => state.profileSettings.save);
+
+  const isEdit = useAppSelector((state) => state.profileSettings.edit);
+
+  const profileImage = useAppSelector(
+    (state) => state.userProvider.profileImage,
+  );
+
+  const fileImage = useAppSelector((state) => state.userProvider.fileImage);
 
   useEffect(() => {
     const userId = getCookie("userId");
@@ -29,6 +48,31 @@ const ProfileSettings: FC = () => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    const userId = getCookie("userId");
+    if (profileImage) {
+      setFormData((prev) => {
+        if (!prev) return null;
+        return {
+          ...prev,
+          profile_image: profileImage,
+        };
+      });
+    }
+    console.log(formData);
+    if (isSaved && userId && formData) {
+      (async function update() {
+        console.log(formData);
+        await updateUserInfo(formData);
+        if (fileImage) {
+          await uploadProfileImage(fileImage, userId);
+        }
+
+        dispatch(isSave(false));
+      })();
+    }
+  }, [isSaved]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,6 +98,7 @@ const ProfileSettings: FC = () => {
             className="h-12 rounded-[8px] bg-gray-200 px-2"
             value={formData.first_name ?? ""}
             onChange={handleChange}
+            disabled={!isEdit}
           />
         </div>
         <div className="flex flex-1 flex-col gap-1">
@@ -66,6 +111,7 @@ const ProfileSettings: FC = () => {
             className="h-12 rounded-[8px] bg-gray-200 px-2"
             value={formData.last_name ?? ""}
             onChange={handleChange}
+            disabled={!isEdit}
           />
         </div>
       </div>
@@ -81,6 +127,7 @@ const ProfileSettings: FC = () => {
             className="h-12 rounded-[8px] bg-gray-200 px-2"
             value={formData.country ?? ""}
             onChange={handleChange}
+            disabled={!isEdit}
           />
         </div>
         <div className="flex flex-1 flex-col gap-1">
@@ -93,6 +140,7 @@ const ProfileSettings: FC = () => {
             className="h-12 rounded-[8px] bg-gray-200 px-2"
             value={formData.phone_number ?? ""}
             onChange={handleChange}
+            disabled={!isEdit}
           />
         </div>
       </div>
@@ -108,6 +156,7 @@ const ProfileSettings: FC = () => {
             className="h-12 rounded-[8px] bg-gray-200 px-2"
             value={formData.nationality ?? ""}
             onChange={handleChange}
+            disabled={!isEdit}
           />
         </div>
         <div className="flex flex-1 flex-col gap-1">
@@ -120,6 +169,7 @@ const ProfileSettings: FC = () => {
             className="h-12 rounded-[8px] bg-gray-200 px-2"
             value={formData.birthday ?? ""}
             onChange={handleChange}
+            disabled={!isEdit}
           />
         </div>
       </div>
@@ -141,6 +191,7 @@ const ProfileSettings: FC = () => {
               checked={formData.role === option}
               onChange={() => handleRoleChange(option as "user" | "host")}
               className="hidden"
+              disabled={!isEdit}
             />
             {option === "user" ? "User" : "Host"}
           </label>
