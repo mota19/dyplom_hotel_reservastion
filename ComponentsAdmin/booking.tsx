@@ -4,6 +4,8 @@ import DataTable, { Column } from "./DataTable";
 
 const data = [
   {
+    id: 1,
+    room_id: 1,
     apartment: "motel",
     guest: "Emma Johnson",
     email: "emma.johnson@example.com",
@@ -13,6 +15,8 @@ const data = [
     amount: "$450.00",
   },
   {
+    id: 2,
+    room_id: 2,
     apartment: "cabin",
     guest: "Liam Smith",
     email: "liam.smith@example.com",
@@ -22,6 +26,8 @@ const data = [
     amount: "$1,200.00",
   },
   {
+    id: 3,
+    room_id: 3,
     apartment: "hotel",
     guest: "Olivia Davis",
     email: "olivia.davis@example.com",
@@ -31,6 +37,8 @@ const data = [
     amount: "$300.00",
   },
   {
+    id: 4,
+    room_id: 4,
     apartment: "motel",
     guest: "Noah Wilson",
     email: "noah.wilson@example.com",
@@ -40,6 +48,8 @@ const data = [
     amount: "$100.00",
   },
   {
+    id: 5,
+    room_id: 5,
     apartment: "cabin",
     guest: "Ava Martinez",
     email: "ava.martinez@example.com",
@@ -49,6 +59,8 @@ const data = [
     amount: "$600.00",
   },
   {
+    id: 6,
+    room_id: 8,
     apartment: "motel",
     guest: "William Taylor",
     email: "william.taylor@example.com",
@@ -58,6 +70,8 @@ const data = [
     amount: "$750.00",
   },
   {
+    id: 7,
+    room_id: 15,
     apartment: "motel",
     guest: "Sophia Brown",
     email: "sophia.brown@example.com",
@@ -67,6 +81,8 @@ const data = [
     amount: "$400.00",
   },
   {
+    id: 8,
+    room_id: 25,
     apartment: "hotel",
     guest: "James Anderson",
     email: "james.anderson@example.com",
@@ -76,6 +92,8 @@ const data = [
     amount: "$350.00",
   },
   {
+    id: 9,
+    room_id: 13,
     apartment: "hotel",
     guest: "Isabella Thomas",
     email: "isabella.thomas@example.com",
@@ -85,6 +103,8 @@ const data = [
     amount: "$180.00",
   },
   {
+    id: 10,
+    room_id: 130,
     apartment: "cabin",
     guest: "Benjamin Moore",
     email: "benjamin.moore@example.com",
@@ -94,6 +114,8 @@ const data = [
     amount: "$900.00",
   },
   {
+    id: 11,
+    room_id: 135,
     apartment: "motel",
     guest: "Mia Jackson",
     email: "mia.jackson@example.com",
@@ -103,6 +125,8 @@ const data = [
     amount: "$700.00",
   },
   {
+    id: 12,
+    room_id: 105,
     apartment: "hotel",
     guest: "Elijah Harris",
     email: "elijah.harris@example.com",
@@ -114,7 +138,9 @@ const data = [
 ];
 
 const columns: Column<(typeof data)[0]>[] = [
+  { label: "id", accessor: "id" },
   { label: "Apartment", accessor: "apartment" },
+  { label: "room_id", accessor: "room_id" },
   {
     label: "Guest",
     accessor: "guest",

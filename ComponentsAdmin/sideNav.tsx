@@ -27,10 +27,10 @@ const SideNav: FC = () => {
         text="Rooms"
       />
       <LinkBLock
-        href="/apartments"
-        alt="apartments"
+        href="/Accommodation"
+        alt="Accommodation"
         imageSource={apartmentIcon}
-        text="Apartments"
+        text="Accommodation"
       />
     </div>
   );
