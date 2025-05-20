@@ -60,10 +60,9 @@ const ProfileSettings: FC = () => {
         };
       });
     }
-    console.log(formData);
+
     if (isSaved && userId && formData) {
       (async function update() {
-        console.log(formData);
         await updateUserInfo(formData);
         if (fileImage) {
           await uploadProfileImage(fileImage, userId);

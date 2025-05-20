@@ -220,6 +220,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "bookings_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "user_rooms_view"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "bookings_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -239,6 +246,7 @@ export type Database = {
           name: string | null
           pricepernight: number | null
           room_type: string | null
+          sqm: number | null
         }
         Insert: {
           accommodation_id: number
@@ -250,6 +258,7 @@ export type Database = {
           name?: string | null
           pricepernight?: number | null
           room_type?: string | null
+          sqm?: number | null
         }
         Update: {
           accommodation_id?: number
@@ -261,6 +270,7 @@ export type Database = {
           name?: string | null
           pricepernight?: number | null
           room_type?: string | null
+          sqm?: number | null
         }
         Relationships: [
           {
@@ -310,7 +320,37 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      user_rooms_view: {
+        Row: {
+          accommodation_id: number | null
+          capacity: number | null
+          description: string | null
+          discount: number | null
+          id: number | null
+          image: string | null
+          name: string | null
+          owner_id: string | null
+          pricepernight: number | null
+          room_type: string | null
+          sqm: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_user"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rooms_accommodation_id_fkey"
+            columns: ["accommodation_id"]
+            isOneToOne: false
+            referencedRelation: "accommodations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

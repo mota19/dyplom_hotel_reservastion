@@ -114,7 +114,6 @@ export async function getAccommodationsByType() {
     .eq("name", "Hotel")
     .single();
 
-  console.log(types);
   if (typeError) {
     return { data: null, error: typeError };
   }
@@ -123,7 +122,7 @@ export async function getAccommodationsByType() {
     .from("accommodations")
     .select("*, accommodation_types(name)")
     .eq("type_id", types.id);
-  console.log(data);
+
   return { data, error };
 }
 

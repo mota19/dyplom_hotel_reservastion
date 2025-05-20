@@ -27,7 +27,7 @@ const SideNav: FC = () => {
         text="Rooms"
       />
       <LinkBLock
-        href="/Accommodation"
+        href="/accommodation"
         alt="Accommodation"
         imageSource={apartmentIcon}
         text="Accommodation"
