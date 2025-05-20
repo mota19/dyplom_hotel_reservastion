@@ -31,6 +31,7 @@ export const insertAccommodation = async (
     description: string;
     city: string;
     country: string;
+    star_rating: number;
     image: string | null;
     user_id: string;
   },
@@ -59,6 +60,29 @@ export const insertAccommodation = async (
   return { data, error: null };
 };
 
+export const insertRoom = async (roomData: {
+  name: string;
+  description: string;
+  accommodation_id: number;
+  sqm: number;
+  capacity: number;
+  pricepernight: number;
+  discount: number;
+  room_type: string;
+  image: string | null;
+}) => {
+  const { data, error } = await supabase
+    .from("rooms")
+    .insert([roomData])
+    .select();
+
+  console.log(data);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+};
+
 export async function uploadImage(
   userId: string,
   storageName: string,
@@ -77,4 +101,15 @@ export async function uploadImage(
     .getPublicUrl(filePath);
 
   return { publicUrl: urlData.publicUrl, error: null };
+}
+
+export async function getAccommodationNameByUser(user_id: string) {
+  const { data, error } = await supabase
+    .from("accommodations")
+    .select(`id, name`)
+    .eq("user_id", user_id);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
 }

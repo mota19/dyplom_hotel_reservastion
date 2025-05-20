@@ -323,6 +323,7 @@ export type Database = {
       user_rooms_view: {
         Row: {
           accommodation_id: number | null
+          accommodationname: string | null
           capacity: number | null
           description: string | null
           discount: number | null

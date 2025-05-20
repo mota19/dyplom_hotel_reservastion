@@ -1,49 +1,56 @@
 "use client";
-import { FC, useState } from "react";
-import { insertAccommodation, uploadImage } from "@/app/_supabase/adminApi";
+import {
+  getAccommodationNameByUser,
+  insertRoom,
+  uploadImage,
+} from "@/app/_supabase/adminApi";
 import { getCookie } from "@/app/_supabase/apiUser";
+import { FC, useState, useEffect } from "react";
+// import { uploadImage } from "@/app/_supabase/adminApi";
+// import { getCookie } from "@/app/_supabase/apiUser";
 
 interface ModalProps {
   onClose: () => void;
 }
 
-const amenitiesList: Record<string, number> = {
-  "Wi-Fi": 1,
-  Parking: 2,
-  "Swimming Pool": 3,
-  "Air Conditioning": 4,
-  Heating: 5,
-  "Breakfast Included": 6,
-  "Laundry / Washing Machine": 7,
-  TV: 8,
-  Safe: 9,
-  Elevator: 10,
-  "Pet Friendly": 11,
-  Spa: 12,
-  Sauna: 13,
-};
+interface IAccommodation {
+  id: number | null;
+  name: string | null;
+}
 
-const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+const ModalRooms: FC<ModalProps> = ({ onClose }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    type: 1,
-    city: "",
-    country: "",
+    accommodation_id: "",
+    sqm: "",
+    capacity: "",
+    pricerPerNight: "",
+    discount: "",
+    type: "",
     image: null as File | null,
   });
+  const [accommodationData, setAccommodationData] = useState<
+    IAccommodation[] | null
+  >([]);
+  const userId = getCookie("userId");
 
-  const [amenities, setAmenities] = useState<number[]>([]);
+  useEffect(() => {
+    const getAcc = async () => {
+      if (userId) {
+        const { data } = await getAccommodationNameByUser(userId);
 
-  const getAmenityNameById = (id: number): string => {
-    return (
-      Object.entries(amenitiesList).find(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ([_, amenityId]) => amenityId === id,
-      )?.[0] || ""
-    );
-  };
+        if (data) {
+          const uniqueByAccommodationId = Array.from(
+            new Map(data.map((item) => [item, item])).values(),
+          );
+
+          setAccommodationData(uniqueByAccommodationId);
+        }
+      }
+    };
+    getAcc();
+  }, [userId]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -59,16 +66,11 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
     setFormData((prev) => ({ ...prev, image: file }));
   };
 
-  const toggleAmenity = (id: number) => {
-    setAmenities((prev) =>
-      prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id],
-    );
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const userId = getCookie("userId");
+    console.log(formData);
+
     let url = "";
 
     if (formData.image && userId) {
@@ -85,19 +87,20 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
       url = publicUrl;
     }
 
-    const accommodationData = {
+    const roomsData = {
       name: formData.name,
-      type_id: formData.type,
       description: formData.description,
-      city: formData.city,
-      country: formData.country,
-      star_rating: 5,
+      accommodation_id: +formData.accommodation_id,
+      sqm: +formData.sqm,
+      capacity: +formData.capacity,
+      pricepernight: +formData.pricerPerNight,
+      discount: +formData.discount,
+      room_type: formData.type,
       image: url,
-      user_id: userId || "",
     };
 
     try {
-      await insertAccommodation(accommodationData, amenities);
+      await insertRoom(roomsData);
       onClose();
     } catch (err) {
       console.error("Accommodation insert failed:", err);
@@ -114,7 +117,7 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
         onSubmit={handleSubmit}
       >
         <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">
-          Add Accommodation
+          Add Room
         </h2>
 
         {/* Name */}
@@ -131,7 +134,24 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
             onChange={handleInputChange}
           />
         </div>
-
+        <div className="mb-4">
+          <select
+            name="accommodation_id"
+            className="w-full rounded-xl border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 focus:outline-none"
+            value={formData.accommodation_id!}
+            onChange={handleInputChange}
+          >
+            <option value="" disabled>
+              Choose an accommodation
+            </option>
+            {accommodationData?.map((el) => (
+              <option
+                value={String(el.id)}
+                key={el.id}
+              >{`${el.id}: ${el.name}`}</option>
+            ))}
+          </select>
+        </div>
         {/* Description */}
         <div className="mb-4">
           <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -155,9 +175,21 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
             value={formData.type!}
             onChange={handleInputChange}
           >
-            <option value={1}>Hotel</option>
-            <option value={2}>Motel</option>
-            <option value={3}>Cabin</option>
+            <option value="" disabled>
+              Choose a type of room
+            </option>
+            <option value="Standard">Standard</option>
+            <option value="Economy">Economy</option>
+            <option value="Cabin">Cabin</option>
+            <option value="Deluxe">Deluxe</option>
+            <option value="Suite">Suite</option>
+            <option value="Junior Suite">Junior Suite</option>
+            <option value="Studio">Studio</option>
+            <option value="Family Room">Family Room</option>
+            <option value="Connecting Rooms">Connecting Rooms</option>
+            <option value="Presidential Suite">Presidential Suite</option>
+            <option value="Penthouse">Penthouse</option>
+            <option value="Apartment">Apartment</option>
           </select>
         </div>
 
@@ -165,63 +197,58 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
         <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              City
+              Square meters
             </label>
             <input
               type="text"
-              name="city"
-              placeholder="City"
+              name="sqm"
+              placeholder="Square meters"
               className="w-full rounded-xl border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 focus:outline-none"
-              value={formData.city}
+              value={formData.sqm}
               onChange={handleInputChange}
             />
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Country
+              Capacity
             </label>
             <input
               type="text"
-              placeholder="Country"
-              name="country"
+              placeholder="Capacity"
+              name="capacity"
               className="w-full rounded-xl border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 focus:outline-none"
-              value={formData.country}
+              value={formData.capacity}
               onChange={handleInputChange}
             />
           </div>
         </div>
-
-        {/* Amenities combobox */}
-        <div className="relative mb-6">
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Amenities
-          </label>
-          <div
-            className="w-full cursor-pointer rounded-xl border border-gray-300 px-4 py-2 select-none focus:outline-none"
-            onClick={() => setIsDropdownOpen((prev) => !prev)}
-          >
-            {amenities.length > 0
-              ? amenities.map(getAmenityNameById).join(", ")
-              : "Select amenities..."}
+        <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              discount
+            </label>
+            <input
+              type="text"
+              name="discount"
+              placeholder="discount"
+              className="w-full rounded-xl border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 focus:outline-none"
+              value={formData.discount}
+              onChange={handleInputChange}
+            />
           </div>
-
-          {isDropdownOpen && (
-            <div className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
-              {Object.entries(amenitiesList).map(([amenity, id]) => (
-                <label
-                  key={id}
-                  className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
-                >
-                  <input
-                    type="checkbox"
-                    checked={amenities.includes(id)}
-                    onChange={() => toggleAmenity(id)}
-                  />
-                  <span>{amenity}</span>
-                </label>
-              ))}
-            </div>
-          )}
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Price per night
+            </label>
+            <input
+              type="text"
+              placeholder="Price per night"
+              name="pricerPerNight"
+              className="w-full rounded-xl border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 focus:outline-none"
+              value={formData.pricerPerNight}
+              onChange={handleInputChange}
+            />
+          </div>
         </div>
 
         {/* Image upload */}
@@ -259,4 +286,4 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
   );
 };
 
-export default ModalAccommodation;
+export default ModalRooms;
