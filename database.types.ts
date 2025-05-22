@@ -9,44 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      accommodation_additional_info: {
-        Row: {
-          accommodation_id: number | null
-          cancellation_policy: string | null
-          check_in_time: string | null
-          check_out_time: string | null
-          id: number
-          notes: string | null
-          rules: string | null
-        }
-        Insert: {
-          accommodation_id?: number | null
-          cancellation_policy?: string | null
-          check_in_time?: string | null
-          check_out_time?: string | null
-          id?: number
-          notes?: string | null
-          rules?: string | null
-        }
-        Update: {
-          accommodation_id?: number | null
-          cancellation_policy?: string | null
-          check_in_time?: string | null
-          check_out_time?: string | null
-          id?: number
-          notes?: string | null
-          rules?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "accommodation_additional_info_accommodation_id_fkey"
-            columns: ["accommodation_id"]
-            isOneToOne: false
-            referencedRelation: "accommodations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       accommodation_amenities: {
         Row: {
           accommodation_id: number
@@ -104,6 +66,7 @@ export type Database = {
           longitude: number | null
           name: string
           pricePerNight: number | null
+          reveiws: number | null
           star_rating: number | null
           type_id: number
           updated_at: string | null
@@ -120,6 +83,7 @@ export type Database = {
           longitude?: number | null
           name: string
           pricePerNight?: number | null
+          reveiws?: number | null
           star_rating?: number | null
           type_id: number
           updated_at?: string | null
@@ -136,6 +100,7 @@ export type Database = {
           longitude?: number | null
           name?: string
           pricePerNight?: number | null
+          reveiws?: number | null
           star_rating?: number | null
           type_id?: number
           updated_at?: string | null
@@ -159,6 +124,21 @@ export type Database = {
         ]
       }
       amenities: {
+        Row: {
+          id: number
+          name: string
+        }
+        Insert: {
+          id?: number
+          name: string
+        }
+        Update: {
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
+      bed_types: {
         Row: {
           id: number
           name: string
@@ -231,6 +211,46 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      room_beds: {
+        Row: {
+          bed_count: number
+          bed_type_id: number
+          room_id: number
+        }
+        Insert: {
+          bed_count: number
+          bed_type_id: number
+          room_id: number
+        }
+        Update: {
+          bed_count?: number
+          bed_type_id?: number
+          room_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "room_beds_bed_type_id_fkey"
+            columns: ["bed_type_id"]
+            isOneToOne: false
+            referencedRelation: "bed_types"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_beds_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_beds_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "user_rooms_view"
             referencedColumns: ["id"]
           },
         ]

@@ -1,7 +1,10 @@
+"use client";
+
 import { FC } from "react";
 import Image from "next/image";
 import { CarouselItem } from "@/components/ui/carousel";
 import { PropPopularHotes } from "@/types/supabaseTypes";
+import { useRouter } from "next/navigation";
 import Rating from "./Rating";
 
 const HotelCard: FC<PropPopularHotes> = ({
@@ -11,9 +14,15 @@ const HotelCard: FC<PropPopularHotes> = ({
   star_rating,
   pricePerNight,
   image,
+  onClickText,
 }) => {
+  const router = useRouter();
+
   return (
-    <CarouselItem className="mb-5 h-auto cursor-pointer rounded-lg bg-white shadow-lg transition-shadow duration-300 hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)] md:basis-1/3 lg:basis-1/4">
+    <CarouselItem
+      className="mb-5 h-auto cursor-pointer rounded-lg bg-white shadow-lg transition-shadow duration-300 hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)] md:basis-1/3 lg:basis-1/4"
+      onClick={() => router.push(onClickText)}
+    >
       <Image
         src={image || "/image/default.jpg"}
         alt="background-switherland"

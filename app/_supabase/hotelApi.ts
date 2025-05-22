@@ -126,6 +126,40 @@ export async function getAccommodationsByType() {
   return { data, error };
 }
 
+export async function getAccommodationById(id: number) {
+  const { data, error } = await supabase
+    .from("accommodations")
+    .select(
+      `
+      *,
+      accommodation_amenities (
+        amenities (
+          id,
+          name
+        )
+      ),
+      rooms (
+        *,
+        room_beds (
+          bed_count,
+          bed_types (
+            id,
+            name
+          )
+        )
+      )
+    `,
+    )
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Error fetching accommodation:", error);
+    return null;
+  }
+
+  return data;
+}
 export async function saveUserData(
   id: string,
   first_name?: string | null,

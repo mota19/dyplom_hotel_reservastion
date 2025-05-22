@@ -32,6 +32,7 @@ const Hotels: FC = async () => {
               id={el.id}
               pricePerNight={el.pricePerNight}
               image={el.image}
+              onClickText={`/booking/${el.id}`}
             />
           ))}
         </CarouselContent>

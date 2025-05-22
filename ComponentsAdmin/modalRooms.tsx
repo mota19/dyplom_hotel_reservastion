@@ -6,8 +6,6 @@ import {
 } from "@/app/_supabase/adminApi";
 import { getCookie } from "@/app/_supabase/apiUser";
 import { FC, useState, useEffect } from "react";
-// import { uploadImage } from "@/app/_supabase/adminApi";
-// import { getCookie } from "@/app/_supabase/apiUser";
 
 interface ModalProps {
   onClose: () => void;
@@ -17,6 +15,14 @@ interface IAccommodation {
   id: number | null;
   name: string | null;
 }
+
+const roomBedsID: Record<string, number> = {
+  Single: 1,
+  Double: 2,
+  Twin: 3,
+  King: 4,
+  Queen: 5,
+};
 
 const ModalRooms: FC<ModalProps> = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -33,6 +39,10 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
   const [accommodationData, setAccommodationData] = useState<
     IAccommodation[] | null
   >([]);
+  const [roomBeds, setRoomBeds] = useState<
+    { bed_type_id: number; bed_count: number }[]
+  >([]);
+  const [isBedsDropdownOpen, setIsBedsDropdownOpen] = useState(false);
   const userId = getCookie("userId");
 
   useEffect(() => {
@@ -66,6 +76,19 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
     setFormData((prev) => ({ ...prev, image: file }));
   };
 
+  const updateBedCount = (bed_type_id: number, bed_count: number) => {
+    setRoomBeds((prev) => {
+      const exists = prev.find((b) => b.bed_type_id === bed_type_id);
+      if (exists) {
+        return prev.map((b) =>
+          b.bed_type_id === bed_type_id ? { ...b, bed_count } : b,
+        );
+      } else {
+        return [...prev, { bed_type_id, bed_count }];
+      }
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -76,7 +99,7 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
     if (formData.image && userId) {
       const { publicUrl, error } = await uploadImage(
         userId,
-        "images",
+        "rooms",
         formData.image,
       );
       if (error) {
@@ -100,11 +123,12 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
     };
 
     try {
-      await insertRoom(roomsData);
+      const filteredBeds = roomBeds.filter((b) => b.bed_count > 0);
+      await insertRoom(roomsData, filteredBeds);
       onClose();
     } catch (err) {
-      console.error("Accommodation insert failed:", err);
-      alert("Failed to save accommodation");
+      console.error("Room insert failed:", err);
+      alert("Failed to save room");
     }
 
     onClose();
@@ -169,6 +193,9 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
 
         {/* Type */}
         <div className="mb-4">
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Type of room
+          </label>
           <select
             name="type"
             className="w-full rounded-xl border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-400 focus:outline-none"
@@ -192,7 +219,57 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
             <option value="Apartment">Apartment</option>
           </select>
         </div>
+        <div className="relative mb-6">
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Beds
+          </label>
+          <div
+            className="w-full cursor-pointer rounded-xl border border-gray-300 px-4 py-2 select-none"
+            onClick={() => setIsBedsDropdownOpen((prev) => !prev)}
+          >
+            {roomBeds.length > 0
+              ? roomBeds
+                  .map(
+                    (b) =>
+                      `${Object.keys(roomBedsID).find(
+                        (k) => roomBedsID[k] === b.bed_type_id,
+                      )} (${b.bed_count})`,
+                  )
+                  .join(", ")
+              : "Select beds..."}
+          </div>
 
+          {isBedsDropdownOpen && (
+            <div className="absolute z-10 mt-1 mb-20 max-h-60 w-full overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-lg">
+              {Object.entries(roomBedsID).map(([bedName, bed_type_id]) => {
+                const currentCount =
+                  roomBeds.find((b) => b.bed_type_id === bed_type_id)
+                    ?.bed_count || 0;
+
+                return (
+                  <div
+                    key={bed_type_id}
+                    className="flex items-center justify-between gap-4 px-4 py-2 hover:bg-gray-50"
+                  >
+                    <span>{bedName}</span>
+                    <input
+                      type="number"
+                      min="0"
+                      value={currentCount}
+                      onChange={(e) =>
+                        updateBedCount(
+                          bed_type_id,
+                          parseInt(e.target.value) || 0,
+                        )
+                      }
+                      className="w-20 rounded-lg border border-gray-300 px-2 py-1 text-right"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
         {/* City and Country */}
         <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>

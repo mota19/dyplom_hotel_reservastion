@@ -60,25 +60,42 @@ export const insertAccommodation = async (
   return { data, error: null };
 };
 
-export const insertRoom = async (roomData: {
-  name: string;
-  description: string;
-  accommodation_id: number;
-  sqm: number;
-  capacity: number;
-  pricepernight: number;
-  discount: number;
-  room_type: string;
-  image: string | null;
-}) => {
+export const insertRoom = async (
+  roomData: {
+    name: string;
+    description: string;
+    accommodation_id: number;
+    sqm: number;
+    capacity: number;
+    pricepernight: number;
+    discount: number;
+    room_type: string;
+    image: string | null;
+  },
+  beds: { bed_type_id: number; bed_count: number }[],
+) => {
+  // 1. Insert into rooms
   const { data, error } = await supabase
     .from("rooms")
     .insert([roomData])
     .select();
 
-  console.log(data);
-
   if (error || !data) return { data: null, error };
+
+  const roomId = data[0].id;
+
+  // 2. Insert into room_beds
+  const bedsInsert = beds.map(({ bed_type_id, bed_count }) => ({
+    room_id: roomId,
+    bed_type_id,
+    bed_count,
+  }));
+
+  const { error: bedsError } = await supabase
+    .from("room_beds")
+    .insert(bedsInsert);
+
+  if (bedsError) return { data: null, error: bedsError };
 
   return { data, error: null };
 };
