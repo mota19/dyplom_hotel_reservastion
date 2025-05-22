@@ -149,6 +149,7 @@ const DetailInfo: FC = () => {
                   image={room.image}
                   title={room.name}
                   area={room.sqm}
+                  typeOfRoom={room.room_type}
                   capacity={room.capacity}
                   bedSize={room.room_beds}
                   price={room.pricepernight}

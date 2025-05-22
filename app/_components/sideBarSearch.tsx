@@ -65,7 +65,7 @@ const SideBarSearch: FC = () => {
         src={Arrow}
         alt="arrow"
         className="rotate-225 cursor-pointer"
-        onClick={router.back}
+        onClick={() => router.push("/")}
       ></Image>
       <h2 className="text-2xl font-[600]">Your search</h2>
       <div className="flex flex-col">

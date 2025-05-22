@@ -18,6 +18,7 @@ interface RoomsCardProps {
   title: string | null;
   area: number | null;
   capacity: number | null;
+  typeOfRoom: string | null;
   bedSize: roomBeds[];
   price: number | null;
 }
@@ -28,6 +29,7 @@ const RoomsCard: FC<RoomsCardProps> = ({
   area,
   capacity,
   bedSize,
+  typeOfRoom,
   price,
 }) => {
   return (
@@ -40,7 +42,10 @@ const RoomsCard: FC<RoomsCardProps> = ({
         className="h-[300px] w-full rounded-t-2xl object-cover"
       />
       <div className="space-y-1 px-2 pb-4">
-        <p className="text-lg font-semibold">{title}</p>
+        <div>
+          <p className="mb-0 text-lg font-semibold">{title}</p>
+          <p className="text-gray-600">{`${typeOfRoom} room`}</p>
+        </div>
         <div className="flex items-center gap-2">
           <Image src={sqm} alt="area" className="h-4 w-4" />
           <p className="text-base font-light">{`${area} sqm`}</p>
