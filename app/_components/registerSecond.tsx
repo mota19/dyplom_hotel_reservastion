@@ -3,6 +3,8 @@ import React, { FC, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { saveUserData } from "../_supabase/hotelApi";
+import { getCookie } from "../_supabase/apiUser";
 
 const RegisterSecond: FC = () => {
   const [fisrtName, setFirstName] = useState<string>("");
@@ -21,8 +23,9 @@ const RegisterSecond: FC = () => {
 
   const router = useRouter();
   const { step } = useParams();
+  const userId = getCookie("userId");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: {
       fisrtName?: string;
@@ -52,6 +55,18 @@ const RegisterSecond: FC = () => {
       setErrors(newErrors);
     } else {
       setErrors({});
+      if (userId) {
+        await saveUserData(
+          userId,
+          fisrtName,
+          lastName,
+          country,
+          phoneNumber,
+          birthday,
+          role,
+        );
+      }
+
       router.push("2");
     }
   };

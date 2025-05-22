@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState, useEffect, useRef } from "react";
+import { FC, useState, useEffect } from "react";
 import Image from "next/image";
 import { getAllInfoProfile } from "../_supabase/apiUser";
 import { getCookie } from "../_supabase/apiUser";
@@ -7,15 +7,12 @@ import { User } from "@/types/supabaseTypes";
 import { useAppSelector } from "@/redux/hooks/hooks";
 import { useAppDispatch } from "@/redux/hooks/hooks";
 import { isSave, isEdit } from "@/redux/slices/profileSettings";
-// import {
-//   setProfileImageRedux,
-//   setFileImage,
-// } from "@/redux/slices/userProviderSlice";
+import { uploadImage } from "../_supabase/adminApi";
+import { updateImageUserById } from "../_supabase/apiUser";
 
 const ProfileHeader: FC = () => {
   const [user, setUser] = useState<User[] | null>(null);
-  // const [localImage, setLocalImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [image, setImage] = useState<File | null>(null);
   const isEditt = useAppSelector((state) => state.profileSettings.edit);
 
   const email = useAppSelector((state) => state.userProvider.email);
@@ -36,57 +33,58 @@ const ProfileHeader: FC = () => {
     })();
   }, []);
 
-  const handleChangeIsSave = () => {
+  const handleChangeIsSave = async () => {
+    const userId = getCookie("userId");
     dispatch(isSave(true));
     dispatch(isEdit(!isEditt));
+
+    if (userId && image) {
+      const { publicUrl } = await uploadImage(userId, "profile", image);
+      if (publicUrl) {
+        await updateImageUserById(userId, publicUrl);
+      }
+    }
   };
 
   const handleEdit = () => {
     dispatch(isEdit(!isEditt));
   };
 
-  const handleImageClick = () => {
-    if (isEditt) {
-      fileInputRef.current?.click();
-    }
+  const handleImageClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImage(file);
   };
-
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     setLocalImage(URL.createObjectURL(file)); // Щоб показати превʼю
-  //     dispatch(setProfileImageRedux(file.name));
-  //     dispatch(setFileImage(file));
-  //   }
-  // };
 
   return (
     <div className="flex h-[100px] items-center justify-between">
       <div className="flex">
-        <div className="relative">
-          <Image
-            src={profileImage || "/image/default.jpg"}
-            alt="profile"
-            width={100}
-            height={100}
-            className="h-[100px] w-[100px] cursor-pointer rounded-full object-cover"
-            onClick={handleImageClick}
-          />
+        <div className="relative h-[100px] w-[100px]">
+          <label htmlFor="image-upload">
+            <Image
+              src={
+                image
+                  ? URL.createObjectURL(image)
+                  : profileImage || "/image/default.jpg"
+              }
+              alt="profile"
+              width={100}
+              height={100}
+              className="h-full w-full cursor-pointer rounded-full object-cover"
+            />
+            {isEditt && (
+              <div className="bg-opacity-50 absolute right-0 bottom-0 left-0 cursor-pointer rounded-b-full bg-black py-1 text-center text-xs text-white">
+                Change
+              </div>
+            )}
+          </label>
+
           <input
-            ref={fileInputRef}
+            id="image-upload"
             type="file"
             accept="image/*"
             className="hidden"
-            // onChange={handleFileChange}
+            onChange={handleImageClick}
           />
-          {/* {isEditt && (
-            <div
-              onClick={handleImageClick}
-              className="bg-opacity-50 absolute right-0 bottom-0 left-0 cursor-pointer rounded-b-full bg-black py-1 text-center text-xs text-white"
-            >
-              Change
-            </div>
-          )} */}
         </div>
         <div className="ml-2 flex flex-col justify-center">
           <p className="text-2xl font-[700]">

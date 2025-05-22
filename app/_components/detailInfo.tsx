@@ -31,7 +31,7 @@ const DetailInfo: FC = () => {
     (async function getAccommodationInfo() {
       if (id) {
         const data = await getAccommodationById(+id);
-        console.log(data);
+
         setData(data);
       }
       return;

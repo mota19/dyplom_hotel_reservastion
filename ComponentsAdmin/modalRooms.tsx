@@ -92,8 +92,6 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(formData);
-
     let url = "";
 
     if (formData.image && userId) {

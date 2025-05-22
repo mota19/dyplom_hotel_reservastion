@@ -49,8 +49,6 @@ export async function getBookingSearch(city: string, filters: Filters) {
       .from("accommodation_types")
       .select("id, name")
       .in("name", types);
-    console.log(types);
-    console.log(typesData);
 
     if (typeError || !typesData) {
       return {

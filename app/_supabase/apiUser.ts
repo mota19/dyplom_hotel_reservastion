@@ -12,7 +12,7 @@ export async function postRegisterUser(email: string, password: string) {
     console.error(error);
   }
 
-  return data;
+  return { data };
 }
 
 //Верифікація емейлу за OTP кодом
@@ -170,41 +170,23 @@ export async function updateUserInfo(user: User) {
   return { data, error: null };
 }
 
-export const uploadProfileImage = async (file: File, userId: string) => {
-  // Завантаження файлу
-  const { error: uploadError } = await supabase.storage
-    .from("profile")
-    .upload(`avatar.png`, file, {
-      cacheControl: "3600",
-      upsert: true,
-    });
-
-  if (uploadError) throw uploadError;
-
-  // Отримання публічного посилання
-  const { data: urlData } = supabase.storage
-    .from("profile")
-    .getPublicUrl(`/avatar.png`);
-
-  const publicUrl = urlData.publicUrl;
-
-  // Оновлення поля у таблиці "users"
-  const { error: updateError } = await supabase
-    .from("users")
-    .update({ profile_image: publicUrl })
-    .eq("id", userId);
-
-  if (updateError) throw updateError;
-
-  return publicUrl;
-};
-
 export async function userGetRole(id: string) {
   const { data, error } = await supabase
     .from("users")
     .select("role")
     .eq("id", id)
     .single();
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}
+
+export async function updateImageUserById(id: string, image: string) {
+  const { data, error } = await supabase
+    .from("users")
+    .update({ profile_image: image })
+    .eq("id", id);
+
   if (error || !data) return { data: null, error };
 
   return { data, error: null };

@@ -1,11 +1,7 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import ProfileOauthButtons from "./ProfileOuathButtons";
-import {
-  getAllInfoProfile,
-  getCookie,
-  uploadProfileImage,
-} from "../_supabase/apiUser";
+import { getAllInfoProfile, getCookie } from "../_supabase/apiUser";
 import { User } from "@/types/supabaseTypes";
 import { useAppSelector } from "@/redux/hooks/hooks";
 import { updateUserInfo } from "../_supabase/apiUser";
@@ -30,12 +26,6 @@ const ProfileSettings: FC = () => {
 
   const isEdit = useAppSelector((state) => state.profileSettings.edit);
 
-  const profileImage = useAppSelector(
-    (state) => state.userProvider.profileImage,
-  );
-
-  const fileImage = useAppSelector((state) => state.userProvider.fileImage);
-
   useEffect(() => {
     const userId = getCookie("userId");
     (async function getInfo() {
@@ -51,22 +41,10 @@ const ProfileSettings: FC = () => {
 
   useEffect(() => {
     const userId = getCookie("userId");
-    if (profileImage) {
-      setFormData((prev) => {
-        if (!prev) return null;
-        return {
-          ...prev,
-          profile_image: profileImage,
-        };
-      });
-    }
 
     if (isSaved && userId && formData) {
       (async function update() {
         await updateUserInfo(formData);
-        if (fileImage) {
-          await uploadProfileImage(fileImage, userId);
-        }
 
         dispatch(isSave(false));
       })();

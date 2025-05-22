@@ -18,7 +18,7 @@ const Register: FC = () => {
 
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newErrors: {
@@ -59,7 +59,9 @@ const Register: FC = () => {
     } else {
       setErrors({});
       document.cookie = `userEmail=${email}; expires=${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
-      postRegisterUser(email, password);
+      const { data } = await postRegisterUser(email, password);
+
+      document.cookie = `userId=${data.user?.id}; expires=${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
       router.push("sign-up/1");
     }
   };
