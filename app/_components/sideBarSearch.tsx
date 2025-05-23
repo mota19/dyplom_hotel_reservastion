@@ -25,7 +25,9 @@ const SideBarSearch: FC = () => {
   const [destination, setDestination] = useState<string>(
     useAppSelector((state) => state.info.destination) ?? "",
   );
-  const [gueests, setGueests] = useState<string>("");
+  const [gueests, setGueests] = useState<string>(
+    useAppSelector((state) => state.info.numberOfGuest).toString() || "1",
+  );
   const [range, setRange] = useState<DateRange | undefined>();
   const dispatch = useAppDispatch();
   const router = useRouter();
