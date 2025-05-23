@@ -146,6 +146,7 @@ const DetailInfo: FC = () => {
               {data?.rooms?.map((room, index) => (
                 <RoomsCard
                   key={index}
+                  id={room.id}
                   image={room.image}
                   title={room.name}
                   area={room.sqm}

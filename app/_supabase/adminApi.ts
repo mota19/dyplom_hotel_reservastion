@@ -130,3 +130,16 @@ export async function getAccommodationNameByUser(user_id: string) {
 
   return { data, error: null };
 }
+
+export async function getBookingByUser(userId: string) {
+  const { data, error } = await supabase
+    .from("booking_details")
+    .select(
+      "booking_id, accommodation_name, room_id, guest_name, guest_email, status, numberOfGuests, start_date, end_date, pricepernight",
+    )
+    .eq("owner_id", userId);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}

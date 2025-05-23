@@ -185,3 +185,19 @@ export async function saveUserData(
 
   return { data, error };
 }
+
+export async function saveBooking(booking: {
+  user_id: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  room_id: number;
+  numberOfGuests: number;
+}) {
+  console.log(booking);
+  const { data, error } = await supabase.from("bookings").insert([booking]);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}

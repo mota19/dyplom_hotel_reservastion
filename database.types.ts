@@ -31,6 +31,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "accommodation_amenities_accommodation_id_fkey"
+            columns: ["accommodation_id"]
+            isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["accommodation_id"]
+          },
+          {
             foreignKeyName: "accommodation_amenities_amenity_id_fkey"
             columns: ["amenity_id"]
             isOneToOne: false
@@ -118,6 +125,20 @@ export type Database = {
             foreignKeyName: "fk_user"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["guest_id"]
+          },
+          {
+            foreignKeyName: "fk_user"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "fk_user"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -155,30 +176,30 @@ export type Database = {
       }
       bookings: {
         Row: {
-          accommodation_id: number | null
           created_at: string | null
           end_date: string
           id: number
+          numberOfGuests: number | null
           room_id: number | null
           start_date: string
           status: string | null
           user_id: string | null
         }
         Insert: {
-          accommodation_id?: number | null
           created_at?: string | null
           end_date: string
           id?: number
+          numberOfGuests?: number | null
           room_id?: number | null
           start_date: string
           status?: string | null
           user_id?: string | null
         }
         Update: {
-          accommodation_id?: number | null
           created_at?: string | null
           end_date?: string
           id?: number
+          numberOfGuests?: number | null
           room_id?: number | null
           start_date?: string
           status?: string | null
@@ -186,11 +207,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_accommodation_id_fkey"
-            columns: ["accommodation_id"]
+            foreignKeyName: "bookings_room_id_fkey"
+            columns: ["room_id"]
             isOneToOne: false
-            referencedRelation: "accommodations"
-            referencedColumns: ["id"]
+            referencedRelation: "booking_details"
+            referencedColumns: ["room_id"]
           },
           {
             foreignKeyName: "bookings_room_id_fkey"
@@ -205,6 +226,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "user_rooms_view"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["guest_id"]
+          },
+          {
+            foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["owner_id"]
           },
           {
             foreignKeyName: "bookings_user_id_fkey"
@@ -238,6 +273,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "bed_types"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "room_beds_room_id_fkey"
+            columns: ["room_id"]
+            isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["room_id"]
           },
           {
             foreignKeyName: "room_beds_room_id_fkey"
@@ -300,6 +342,13 @@ export type Database = {
             referencedRelation: "accommodations"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "rooms_accommodation_id_fkey"
+            columns: ["accommodation_id"]
+            isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["accommodation_id"]
+          },
         ]
       }
       users: {
@@ -340,6 +389,29 @@ export type Database = {
       }
     }
     Views: {
+      booking_details: {
+        Row: {
+          accommodation_id: number | null
+          accommodation_name: string | null
+          booking_id: number | null
+          end_date: string | null
+          guest_email: string | null
+          guest_id: string | null
+          guest_name: string | null
+          guest_phone: string | null
+          numberOfGuests: number | null
+          owner_email: string | null
+          owner_id: string | null
+          owner_name: string | null
+          owner_phone: string | null
+          pricepernight: number | null
+          room_id: number | null
+          room_name: string | null
+          start_date: string | null
+          status: string | null
+        }
+        Relationships: []
+      }
       user_rooms_view: {
         Row: {
           accommodation_id: number | null
@@ -360,6 +432,20 @@ export type Database = {
             foreignKeyName: "fk_user"
             columns: ["owner_id"]
             isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["guest_id"]
+          },
+          {
+            foreignKeyName: "fk_user"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["owner_id"]
+          },
+          {
+            foreignKeyName: "fk_user"
+            columns: ["owner_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
@@ -369,6 +455,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "accommodations"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rooms_accommodation_id_fkey"
+            columns: ["accommodation_id"]
+            isOneToOne: false
+            referencedRelation: "booking_details"
+            referencedColumns: ["accommodation_id"]
           },
         ]
       }
