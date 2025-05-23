@@ -30,15 +30,80 @@ export async function getPopularAccommodations() {
   return { data, error };
 }
 
-export async function getBookingSearch(city: string, filters: Filters) {
-  let query = supabase.from("accommodations").select("*");
+export async function getBookingSearch(
+  city: string,
+  filters: Filters,
+  startDate: string,
+  endDate: string,
+  guests: number = 1,
+) {
+  const { price, rating, types, country, amenities } = filters;
+
+  // 🔍 1. Отримати всі кімнати з достатньою місткістю
+  const { data: allCandidateRooms, error: roomError } = await supabase
+    .from("rooms")
+    .select(
+      `
+    id,
+    accommodation_id,
+    pricepernight,
+    room_type,
+    capacity,
+    room_beds (
+      bed_count,
+      bed_types (
+        id,
+        name
+      )
+    )
+  `,
+    )
+    .gte("capacity", guests);
+
+  if (roomError || !allCandidateRooms) {
+    return {
+      data: null,
+      error: roomError || new Error("Failed to fetch rooms"),
+    };
+  }
+
+  const candidateRoomIds = allCandidateRooms.map((r) => r.id);
+
+  // 🛑 2. Отримати бронювання, які перекриваються з вибраними датами
+  const { data: bookedRooms, error: bookingError } = await supabase
+    .from("bookings")
+    .select("room_id")
+    .in("room_id", candidateRoomIds)
+    .or(`and(start_date.lte.${endDate},end_date.gte.${startDate})`);
+
+  if (bookingError) {
+    return { data: null, error: bookingError };
+  }
+
+  const bookedRoomIds = new Set(bookedRooms?.map((b) => b.room_id) ?? []);
+
+  // ✅ 3. Вибрати лише вільні кімнати
+  const availableRooms = allCandidateRooms.filter(
+    (r) => !bookedRoomIds.has(r.id),
+  );
+
+  if (availableRooms.length === 0) {
+    return { data: [], error: null };
+  }
+
+  const availableAccommodationIds = [
+    ...new Set(availableRooms.map((r) => r.accommodation_id)),
+  ];
+
+  // 📦 4. Формуємо запит до житла з фільтрами
+  let query = supabase
+    .from("accommodations")
+    .select("*")
+    .in("id", availableAccommodationIds);
+
   if (city && city.trim() !== "") {
     query = query.ilike("city", `${city}%`);
   }
-
-  const { popular, price, rating, types, country } = filters;
-
-  console.log(popular);
 
   if (country.length > 0 && country[0].trim() !== "") {
     query = query.ilike("country", `${country}%`);
@@ -99,10 +164,76 @@ export async function getBookingSearch(city: string, filters: Filters) {
     query = query.or(ratingFilters);
   }
 
-  // Виконання запиту
+  if (amenities.length > 0) {
+    const { data: amenityData, error: amenityError } = await supabase
+      .from("amenities")
+      .select("id")
+      .in("name", amenities);
+
+    if (amenityError || !amenityData) {
+      return {
+        data: null,
+        error: amenityError || new Error("Failed to fetch amenities"),
+      };
+    }
+
+    const amenityIds = amenityData.map((a) => a.id);
+
+    const { data: accommodationAmenityData, error: accAmenityError } =
+      await supabase
+        .from("accommodation_amenities")
+        .select("accommodation_id")
+        .in("amenity_id", amenityIds);
+
+    if (accAmenityError || !accommodationAmenityData) {
+      return {
+        data: null,
+        error:
+          accAmenityError ||
+          new Error("Failed to fetch accommodation_amenities"),
+      };
+    }
+
+    const matchedIds = [
+      ...new Set(accommodationAmenityData.map((a) => a.accommodation_id)),
+    ];
+    query = query.in("id", matchedIds);
+  }
+
+  // 🏠 5. Отримуємо житло
   const { data, error } = await query;
 
-  return { data, error };
+  if (error) return { data: null, error };
+
+  if (data && data.length > 0) {
+    const accommodationIds = data.map((a) => a.id);
+
+    // З доступних кімнат вибираємо найдешевшу для кожного accommodation
+    const cheapestRoomByAccommodation = new Map<number, unknown>();
+
+    const availableCheapestRooms = availableRooms
+      .filter(
+        (r) =>
+          accommodationIds.includes(r.accommodation_id) &&
+          r.pricepernight !== null,
+      )
+      .sort((a, b) => a.pricepernight! - b.pricepernight!);
+
+    for (const room of availableCheapestRooms) {
+      if (!cheapestRoomByAccommodation.has(room.accommodation_id)) {
+        cheapestRoomByAccommodation.set(room.accommodation_id, room);
+      }
+    }
+
+    const enrichedData = data.map((acc) => ({
+      ...acc,
+      cheapestRoom: cheapestRoomByAccommodation.get(acc.id) || null,
+    }));
+
+    return { data: enrichedData, error: null };
+  }
+
+  return { data: [], error: null };
 }
 
 export async function getAccommodationsByType() {
@@ -194,7 +325,6 @@ export async function saveBooking(booking: {
   room_id: number;
   numberOfGuests: number;
 }) {
-  console.log(booking);
   const { data, error } = await supabase.from("bookings").insert([booking]);
 
   if (error || !data) return { data: null, error };

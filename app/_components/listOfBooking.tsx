@@ -25,6 +25,21 @@ const ListOfBooking: FC = () => {
     page * itemsPerPage,
   );
 
+  const parseDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? null : d;
+  };
+
+  const inD = parseDate(inDate);
+  const outD = parseDate(outDate);
+
+  let nights = 1;
+
+  if (inD && outD) {
+    const diff = (outD.getTime() - inD.getTime()) / (1000 * 60 * 60 * 24);
+    nights = diff > 0 ? Math.floor(diff) : 1;
+  }
+
   const getPaginationRange = () => {
     const delta = 2; // кількість сусідніх сторінок ліворуч/праворуч
     const range: (number | string)[] = [];
@@ -67,13 +82,14 @@ const ListOfBooking: FC = () => {
         {paginatedData.map((item) => (
           <BookingCard
             key={item.id}
+            cheapestRoom={item.cheapestRoom ? item.cheapestRoom : {}}
             id={item.id}
             city={item.city}
             name={item.name}
             star_rating={item.star_rating}
             country={item.country}
             image={item.image}
-            pricePerNight={item.pricePerNight}
+            nights={nights}
             onClick={() => router.push(`/booking/${item.id}`)}
           />
         ))}

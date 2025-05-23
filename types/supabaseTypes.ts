@@ -25,12 +25,30 @@ export interface IuserProviderState {
   fileImage?: File | null;
 }
 
+type room_beds = {
+  bed_count: number;
+  bed_types: {
+    id: number;
+    name: string;
+  };
+};
+
+type cheapestRoom = {
+  accommodation_id?: number;
+  id?: number;
+  pricepernight?: number;
+  capacity?: number;
+  room_beds?: room_beds[];
+  room_type?: string;
+};
+
 export type Accomodation = {
   city?: string | null;
   country?: string | null;
   created_at?: string | null;
   description?: string | null;
   id: number;
+  cheapestRoom?: cheapestRoom | null;
   image: string | null;
   latitude?: number | null;
   longitude?: number | null;
@@ -39,6 +57,7 @@ export type Accomodation = {
   star_rating?: number | null;
   type_id?: number;
   updated_at?: string | null;
+  nights?: number | null;
   onClick?: () => void;
 };
 

@@ -2,11 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Filters } from "@/types/filters";
 
 const initialState: Filters = {
-  popular: [],
   price: [],
   rating: [],
   types: [],
   country: [],
+  amenities: [],
 };
 
 const filtersSlice = createSlice({
@@ -20,7 +20,7 @@ const filtersSlice = createSlice({
       state.types = action.payload.types;
     },
     updateFilters: (state, action: PayloadAction<Filters>) => {
-      state.popular = action.payload.popular;
+      state.amenities = action.payload.amenities;
       state.price = action.payload.price;
       state.rating = action.payload.rating;
       state.types = action.payload.types;

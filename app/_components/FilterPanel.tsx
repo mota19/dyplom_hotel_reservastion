@@ -100,8 +100,8 @@ const FilterPanel: FC = () => {
           <label key={label} className="flex cursor-pointer items-center">
             <input
               type="checkbox"
-              checked={filters.popular.includes(label)}
-              onChange={() => handleCheckboxChange("popular", label)}
+              checked={filters.amenities.includes(label)}
+              onChange={() => handleCheckboxChange("amenities", label)}
               className="mr-2 cursor-pointer"
             />
             {label}

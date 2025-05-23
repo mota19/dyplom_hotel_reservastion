@@ -32,8 +32,27 @@ const SideBarSearch: FC = () => {
   const filters = useAppSelector((state) => state.filters);
 
   useEffect(() => {
+    const guestsNumber = parseInt(gueests || "1", 10);
+    let fromDate: string;
+    let toDate: string;
+    if (range?.from && range?.to) {
+      fromDate = format(range.from, "yyyy-MM-dd");
+      toDate = format(range.to, "yyyy-MM-dd");
+    } else {
+      fromDate = format(new Date(), "yyyy-MM-dd");
+      toDate = format(
+        new Date(Date.now() + 60 * 60 * 1000 * 24 * 365 * 10),
+        "yyyy-MM-dd",
+      );
+    }
     (async function fetchData() {
-      const { data, error } = await getBookingSearch(destination, filters);
+      const { data, error } = await getBookingSearch(
+        destination,
+        filters,
+        fromDate,
+        toDate,
+        guestsNumber,
+      );
 
       if (error) {
         console.error(error);
@@ -42,16 +61,16 @@ const SideBarSearch: FC = () => {
         dispatch(setCity(destination));
       }
     })();
-  }, [destination, dispatch, filters]);
+  }, [destination, dispatch, filters, gueests, range]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setDestination(inputValue);
     if (range?.from) {
-      dispatch(setInDate(format(range.from, "MMM, d")));
+      dispatch(setInDate(format(range.from, "MMM, d, yyyy")));
     }
     if (range?.to) {
-      dispatch(setOut(format(range.to, "d, MMM")));
+      dispatch(setOut(format(range.to, "d, MMM, yyyy")));
     }
     dispatch(setNumberOfGuests(+gueests));
   }

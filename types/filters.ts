@@ -1,9 +1,9 @@
-export type FilterCategory = "popular" | "price" | "rating" | "types";
+export type FilterCategory = "price" | "rating" | "types" | "amenities";
 
 export type Filters = {
-  popular: string[];
   price: string[];
   rating: string[];
   types: string[];
   country: string[];
+  amenities: string[];
 };

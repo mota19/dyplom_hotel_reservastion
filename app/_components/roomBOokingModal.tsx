@@ -4,12 +4,15 @@ import { DateRangePicker } from "./DateRangePicker";
 import { DateRange } from "react-day-picker";
 import { saveBooking } from "../_supabase/hotelApi";
 import { getCookie } from "../_supabase/apiUser";
+import { useAppSelector } from "@/redux/hooks/hooks";
 
 const RoomOfBookingModal: FC<{ onClose: () => void; room_id: number }> = ({
   onClose,
   room_id,
 }) => {
   const [range, setRange] = useState<DateRange | undefined>();
+
+  const numberOfGuest = useAppSelector((state) => state.info.numberOfGuest);
 
   const handleSave = async () => {
     const user_id = getCookie("userId");
@@ -23,7 +26,7 @@ const RoomOfBookingModal: FC<{ onClose: () => void; room_id: number }> = ({
           end_date,
           status: "unconfirmed",
           room_id,
-          numberOfGuests: 2,
+          numberOfGuests: numberOfGuest || 1,
         });
       }
     }

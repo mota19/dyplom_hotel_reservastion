@@ -17,6 +17,7 @@ interface Booking {
   pricepernight: number | null;
   guest_full?: string | null;
   fullDate?: string | null;
+  amount?: number | null;
 }
 
 const formatDate = (dateString: string | null) => {
@@ -75,9 +76,28 @@ const columns: Column<Booking>[] = [
     align: "right",
   },
   {
-    label: "Amount",
+    label: "price Per Night",
     accessor: "pricepernight",
     render: (item) => <span>${item.pricepernight?.toFixed(2)}</span>,
+    align: "right",
+  },
+  {
+    label: "Amount",
+    accessor: "amount",
+    render: (item) => {
+      if (!item.pricepernight || !item.start_date || !item.end_date)
+        return "$0.00";
+
+      const nights = Math.round(
+        (new Date(item.end_date).getTime() -
+          new Date(item.start_date).getTime()) /
+          (1000 * 60 * 60 * 24),
+      );
+
+      const total = item.pricepernight * nights;
+
+      return <span>${total.toFixed(2)}</span>;
+    },
     align: "right",
   },
 ];
@@ -101,6 +121,15 @@ const TableBooking: FC = () => {
             ...b,
             guest_full: (b.guest_name ?? "") + " " + (b.guest_email ?? ""),
             fullDate: (b.start_date ?? "") + " — " + (b.end_date ?? ""),
+            amount:
+              b.pricepernight && b.start_date && b.end_date
+                ? b.pricepernight *
+                  Math.round(
+                    (new Date(b.end_date).getTime() -
+                      new Date(b.start_date).getTime()) /
+                      (1000 * 60 * 60 * 24),
+                  )
+                : 0,
           }));
           setData(dataWithFull);
         } else {
@@ -119,7 +148,7 @@ const TableBooking: FC = () => {
       searchableFields={["guest_full"]}
       statusField="status"
       statusOptions={["CONFIRMED", "UNCONFIRMED"]}
-      sortableFields={["pricepernight", "start_date"]}
+      sortableFields={["pricepernight", "start_date", "amount"]}
     />
   );
 };

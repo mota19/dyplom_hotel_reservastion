@@ -24,10 +24,10 @@ const ReservationMain: FC = () => {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (range?.from) {
-      dispatch(setInDate(format(range.from, "MMM, d")));
+      dispatch(setInDate(format(range.from, "MMM, d, yyyy")));
     }
     if (range?.to) {
-      dispatch(setOut(format(range.to, "d, MMM")));
+      dispatch(setOut(format(range.to, "d, MMM, yyyy")));
     }
     dispatch(setNumberOfGuests(+gueests));
     dispatch(setCity(destination));
