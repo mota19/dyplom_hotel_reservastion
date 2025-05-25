@@ -331,3 +331,14 @@ export async function saveBooking(booking: {
 
   return { data, error: null };
 }
+
+export async function getBookedDatesById(roomId: number) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("start_date, end_date")
+    .eq("room_id", roomId);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}

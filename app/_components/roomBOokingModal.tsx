@@ -1,18 +1,30 @@
 "use client";
-import { FC, useState } from "react";
-import { DateRangePicker } from "./DateRangePicker";
+import { FC, useEffect, useState } from "react";
+import { DisabledRange } from "./rangeDisabledCalendar";
 import { DateRange } from "react-day-picker";
-import { saveBooking } from "../_supabase/hotelApi";
+import { getBookedDatesById, saveBooking } from "../_supabase/hotelApi";
 import { getCookie } from "../_supabase/apiUser";
 import { useAppSelector } from "@/redux/hooks/hooks";
+import { DateRangePicker } from "./rangeDisabledCalendar";
 
 const RoomOfBookingModal: FC<{ onClose: () => void; room_id: number }> = ({
   onClose,
   room_id,
 }) => {
   const [range, setRange] = useState<DateRange | undefined>();
-
+  const [disabledRange, setDisablesRange] = useState<DisabledRange[] | null>(
+    [],
+  );
   const numberOfGuest = useAppSelector((state) => state.info.numberOfGuest);
+
+  useEffect(() => {
+    async function getDates() {
+      const { data } = await getBookedDatesById(room_id);
+      setDisablesRange(data);
+      return data;
+    }
+    getDates();
+  }, [room_id]);
 
   const handleSave = async () => {
     const user_id = getCookie("userId");
@@ -41,7 +53,11 @@ const RoomOfBookingModal: FC<{ onClose: () => void; room_id: number }> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-[4px]">
       <div className="flex w-[320px] flex-col items-center gap-4 rounded-xl bg-white p-6 shadow-lg">
         <h3 className="font-bold">Choose a date</h3>
-        <DateRangePicker onDateChange={setRange} width="full" />
+        <DateRangePicker
+          onDateChange={setRange}
+          width="full"
+          disabledDates={disabledRange}
+        />
 
         <div className="mt-4 flex w-full justify-between gap-2">
           <button
