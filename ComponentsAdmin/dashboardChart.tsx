@@ -1,4 +1,5 @@
 "use client";
+import { IDashboarInfo } from "@/types/supabaseTypes";
 import { FC } from "react";
 import {
   LineChart,
@@ -9,23 +10,17 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { transformData } from "./dashboardTransof";
 
-const data = [
-  { name: "Jan", bookings: 30, sales: 4000 },
-  { name: "Feb", bookings: 45, sales: 5000 },
-  { name: "Mar", bookings: 60, sales: 7500 },
-  { name: "Apr", bookings: 40, sales: 6200 },
-  { name: "May", bookings: 70, sales: 8900 },
-  { name: "Jun", bookings: 55, sales: 7000 },
-];
+const DashboardCharts: FC<{ datas: IDashboarInfo }> = ({ datas }) => {
+  const dataChart = transformData(datas);
 
-const DashboardCharts: FC = () => {
   return (
     <div className="mt-8 grid grid-cols-1 gap-8">
       <div className="h-80 rounded-xl bg-white p-8 shadow-md">
         <h2 className="mb-4 text-xl font-semibold">Sales per Month</h2>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data}>
+          <LineChart data={dataChart}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />

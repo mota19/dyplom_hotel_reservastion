@@ -117,3 +117,22 @@ export interface IAccommodationWithRelations {
     }[];
   }[];
 }
+
+interface IapartmentId {
+  id: number;
+  rooms: {
+    id: number;
+  }[];
+}
+
+export interface IDashboarInfo {
+  apartmentId: IapartmentId[];
+  bookingDetails: {
+    booking_id: number | null;
+    start_date: string | null;
+    end_date: string | null;
+    room_id: number | null;
+    pricepernight: number | null;
+    status: string | null;
+  }[];
+}

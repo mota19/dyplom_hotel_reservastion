@@ -1,9 +1,36 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import DashboardView from "@/ComponentsAdmin/dashboard";
+import { getCookie } from "@/app/_supabase/apiUser";
+import { getDashboardInfo } from "@/app/_supabase/adminApi";
+import { IDashboarInfo } from "@/types/supabaseTypes";
+
+const defaultData: IDashboarInfo = {
+  apartmentId: [],
+  bookingDetails: [],
+};
 
 const Dashboard: FC = () => {
   const [selectedFilter, setSelectedFilter] = useState("All");
+
+  const [data, setData] = useState<IDashboarInfo | undefined>();
+
+  useEffect(() => {
+    const id = getCookie("userId");
+    async function getData() {
+      if (id !== null) {
+        const { dat } = await getDashboardInfo(
+          id,
+          selectedFilter === "All"
+            ? "All"
+            : (parseInt(selectedFilter) as 7 | 30 | 90),
+        );
+        console.log(dat);
+        setData(dat);
+      }
+    }
+    getData();
+  }, [selectedFilter]);
 
   const filterOptions = ["7", "30", "90", "All"];
 
@@ -29,7 +56,7 @@ const Dashboard: FC = () => {
       </div>
 
       {/* Передаємо фільтр у DashboardView */}
-      <DashboardView />
+      <DashboardView data={data ?? defaultData} />
     </div>
   );
 };

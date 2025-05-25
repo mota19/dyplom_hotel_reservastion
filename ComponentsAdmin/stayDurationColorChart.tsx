@@ -13,31 +13,21 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
-
-const fullStayData = [
-  { name: "2 nights", value: 30 },
-  { name: "3 nights", value: 25 },
-  { name: "4-5 nights", value: 20 },
-  { name: "8-14 nights", value: 25 },
-];
+import {
+  generateMonthlyBookingData,
+  generateStayDurationData,
+} from "./dashboardTransof";
+import { IDashboarInfo } from "@/types/supabaseTypes";
 
 const stayOptions = ["All", "Short (2-3)", "Medium (4-5)", "Long (8-14)"];
 
-const fullBookingsData = [
-  { name: "Jan", bookings: 40 },
-  { name: "Feb", bookings: 30 },
-  { name: "Mar", bookings: 50 },
-  { name: "Apr", bookings: 20 },
-  { name: "May", bookings: 60 },
-  { name: "Jun", bookings: 35 },
-];
-
 const COLORS = ["#fb923c", "#eab308", "#84cc16", "#14b8a6"];
 
-const StayDurationDonutChart: FC = () => {
+const StayDurationDonutChart: FC<{ data: IDashboarInfo }> = ({ data }) => {
   const [stayFilter, setStayFilter] = useState("All");
   const [monthFilter, setMonthFilter] = useState("All");
-
+  const fullStayData = generateStayDurationData(data.bookingDetails);
+  const fullBookingsData = generateMonthlyBookingData(data.bookingDetails);
   const filteredStayData =
     stayFilter === "All"
       ? fullStayData

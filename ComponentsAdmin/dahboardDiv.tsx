@@ -1,11 +1,11 @@
 import { FC } from "react";
 import Image from "next/image";
 
-const DashboardDiv: FC<{ text: string; icon: string; label: string }> = ({
-  text,
-  icon,
-  label,
-}) => {
+const DashboardDiv: FC<{
+  text: string | number;
+  icon: string;
+  label: string;
+}> = ({ text, icon, label }) => {
   return (
     <div className="flex flex-1 items-center gap-4 rounded-xl bg-white p-4 shadow-md transition-shadow hover:shadow-lg">
       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">

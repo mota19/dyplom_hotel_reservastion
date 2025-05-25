@@ -143,3 +143,36 @@ export async function getBookingByUser(userId: string) {
 
   return { data, error: null };
 }
+
+import { formatISO, subDays } from "date-fns";
+
+export async function getDashboardInfo(
+  userId: string,
+  daysAgo: 7 | 30 | 90 | "All" = "All",
+) {
+  let query = supabase
+    .from("booking_details")
+    .select("booking_id, start_date, end_date, room_id, pricepernight, status")
+    .eq("owner_id", userId);
+
+  if (daysAgo !== "All") {
+    const fromDate = formatISO(subDays(new Date(), daysAgo), {
+      representation: "date",
+    });
+    query = query.gte("start_date", fromDate);
+  }
+
+  const { data: bookingDetails, error } = await query;
+
+  if (error || !bookingDetails) return { bookingDetails: null, error };
+
+  const { data: apartmentId, error: apartmentError } = await supabase
+    .from("accommodations")
+    .select("id, rooms (id)")
+    .eq("user_id", userId);
+
+  if (apartmentError || !apartmentId)
+    return { apartmentId: null, apartmentError };
+
+  return { dat: { apartmentId, bookingDetails }, apartmentError: null };
+}
