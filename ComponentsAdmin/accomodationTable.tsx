@@ -2,19 +2,29 @@
 import { FC, useEffect, useState } from "react";
 import DataTable, { Column } from "./DataTable";
 import Image from "next/image";
-import { getAccomodationByUser } from "@/app/_supabase/adminApi";
+import {
+  getAccomodationById,
+  getAccomodationByUser,
+} from "@/app/_supabase/adminApi";
 import { getCookie } from "@/app/_supabase/apiUser";
 import { deleteAccommodation } from "@/app/_supabase/adminApi";
+import ModalAccommodation from "./modalAccommodation";
 
-interface IAccommodation {
+export interface IAccommodation {
   id: number;
   name: string;
-  type_id: { name: string };
+  type_id: { name: string; id?: number };
   description: string | null;
   city: string | null;
   country: string | null;
   star_rating: number | null;
   image: string | null;
+  imageUrl?: string;
+  accommodation_amenities?: {
+    amenity_id: {
+      id: number;
+    };
+  }[];
 }
 
 const columns: Column<IAccommodation>[] = [
@@ -58,6 +68,8 @@ const columns: Column<IAccommodation>[] = [
 
 const AccommodationTable: FC = () => {
   const [data, setData] = useState<IAccommodation[]>([]);
+  const [modalData, setModalData] = useState<IAccommodation[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const userId = getCookie("userId");
@@ -82,18 +94,37 @@ const AccommodationTable: FC = () => {
   }, []);
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      searchableFields={["name", "description", "type_id", "city", "country"]}
-      sortableFields={["id", "star_rating"]}
-      onDelete={(accommodation: IAccommodation) => {
-        if (accommodation.id == null) return;
-        deleteAccommodation(accommodation.id).then(() => {
-          setData((prev) => prev.filter((r) => r.id !== accommodation.id));
-        });
-      }}
-    />
+    <>
+      <DataTable
+        data={data}
+        columns={columns}
+        searchableFields={["name", "description", "type_id", "city", "country"]}
+        sortableFields={["id", "star_rating"]}
+        text="Edit"
+        onEdit={async (accommodation: IAccommodation) => {
+          setIsModalOpen(true);
+          const { data } = await getAccomodationById(accommodation.id || 0);
+          console.log(data);
+          if (data && Array.isArray(data) && data.length > 0) {
+            setModalData(data);
+          } else {
+            setModalData([]);
+          }
+        }}
+        onDelete={(accommodation: IAccommodation) => {
+          if (accommodation.id == null) return;
+          deleteAccommodation(accommodation.id).then(() => {
+            setData((prev) => prev.filter((r) => r.id !== accommodation.id));
+          });
+        }}
+      />
+      {isModalOpen && (
+        <ModalAccommodation
+          onClose={() => setIsModalOpen(false)}
+          data={modalData[0]}
+        />
+      )}
+    </>
   );
 };
 

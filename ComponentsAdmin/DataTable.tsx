@@ -41,6 +41,7 @@ interface DataTableProps<T> {
   sortableFields?: (keyof T)[];
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
+  text: string;
 }
 
 const DataTable = <T,>({
@@ -53,6 +54,7 @@ const DataTable = <T,>({
   sortableFields = [],
   onEdit,
   onDelete,
+  text,
 }: DataTableProps<T>) => {
   const [page, setPage] = useState(0);
   const [search, setSearch] = useState("");
@@ -201,7 +203,7 @@ const DataTable = <T,>({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => onEdit?.(item)}>
-                      Edit
+                      {text}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => onDelete?.(item)}>
                       Delete

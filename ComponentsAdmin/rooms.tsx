@@ -105,6 +105,7 @@ const RoomsTable: FC = () => {
           "discount",
           "accommodation_id",
         ]}
+        text="Edit"
         onEdit={async (room: IRooms) => {
           setIsModalOpen(true);
           const { data } = await getRoomsForUpdate(room.id || 0);

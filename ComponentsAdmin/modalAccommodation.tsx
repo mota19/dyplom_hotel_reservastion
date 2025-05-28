@@ -1,10 +1,17 @@
 "use client";
-import { FC, useState } from "react";
-import { insertAccommodation, uploadImage } from "@/app/_supabase/adminApi";
+import { FC, useEffect, useState } from "react";
+import {
+  insertAccommodation,
+  updateAccommodation,
+  uploadImage,
+} from "@/app/_supabase/adminApi";
 import { getCookie } from "@/app/_supabase/apiUser";
+import { IAccommodation } from "./accomodationTable";
+import Image from "next/image";
 
 interface ModalProps {
   onClose: () => void;
+  data?: IAccommodation;
 }
 
 const amenitiesList: Record<string, number> = {
@@ -23,7 +30,7 @@ const amenitiesList: Record<string, number> = {
   Sauna: 13,
 };
 
-const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
+const ModalAccommodation: FC<ModalProps> = ({ onClose, data }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -32,9 +39,27 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
     city: "",
     country: "",
     image: null as File | null,
+    imageUrl: "",
   });
 
   const [amenities, setAmenities] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        name: data.name || "",
+        description: data.description || "",
+        type: data.type_id.id || 1,
+        city: data.city || "",
+        country: data.country || "",
+        image: null,
+        imageUrl: data.image || "",
+      });
+      setAmenities(
+        data.accommodation_amenities?.map((a) => a.amenity_id.id) ?? [],
+      );
+    }
+  }, [data]);
 
   const getAmenityNameById = (id: number): string => {
     return (
@@ -69,7 +94,8 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
     e.preventDefault();
 
     const userId = getCookie("userId");
-    let url = "";
+
+    let url = formData.imageUrl;
 
     if (formData.image && userId) {
       const { publicUrl, error } = await uploadImage(
@@ -97,7 +123,12 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
     };
 
     try {
-      await insertAccommodation(accommodationData, amenities);
+      if (data && data?.id) {
+        await updateAccommodation(data.id, accommodationData, amenities);
+      } else {
+        await insertAccommodation(accommodationData, amenities);
+      }
+
       onClose();
     } catch (err) {
       console.error("Accommodation insert failed:", err);
@@ -108,7 +139,7 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-[4px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/30 backdrop-blur-[4px]">
       <form
         className="mx-auto w-full max-w-xl rounded-2xl bg-white p-8 shadow-2xl"
         onSubmit={handleSubmit}
@@ -224,6 +255,20 @@ const ModalAccommodation: FC<ModalProps> = ({ onClose }) => {
           )}
         </div>
 
+        {formData.imageUrl && (
+          <div className="mb-4">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Current Image
+            </label>
+            <Image
+              src={formData.imageUrl}
+              alt="Current Room"
+              width={2000}
+              height={2000}
+              className="h-40 w-full rounded-xl object-cover"
+            />
+          </div>
+        )}
         {/* Image upload */}
         <div className="mb-6">
           <label className="mb-1 block text-sm font-medium text-gray-700">

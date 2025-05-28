@@ -60,6 +60,50 @@ export const insertAccommodation = async (
   return { data, error: null };
 };
 
+export const updateAccommodation = async (
+  id: number,
+  accommodationData: {
+    name: string;
+    type_id: number;
+    description: string;
+    city: string;
+    country: string;
+    star_rating: number;
+    image: string | null;
+    user_id: string;
+  },
+  amenityIds: number[],
+) => {
+  const { error: updateError } = await supabase
+    .from("accommodations")
+    .update(accommodationData)
+    .eq("id", id);
+
+  if (updateError) return { data: null, error: updateError };
+
+  // Видалити старі зв'язки
+  const { error: deleteError } = await supabase
+    .from("accommodation_amenities")
+    .delete()
+    .eq("accommodation_id", id);
+
+  if (deleteError) return { data: null, error: deleteError };
+
+  // Додати нові
+  const amenitiesInsert = amenityIds.map((amenity_id) => ({
+    accommodation_id: id,
+    amenity_id,
+  }));
+
+  const { error: amenitiesError } = await supabase
+    .from("accommodation_amenities")
+    .insert(amenitiesInsert);
+
+  if (amenitiesError) return { data: null, error: amenitiesError };
+
+  return { data: { id }, error: null };
+};
+
 export const insertRoom = async (
   roomData: {
     name: string;
@@ -246,3 +290,27 @@ export async function RoomsUpdate(
   if (bedsInsertError) return { data: null, error: bedsInsertError };
   return { data, error: null };
 }
+
+export async function confirmedBooking(id: number) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .update({ status: "confirmed" })
+    .eq("id", id);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}
+
+export const getAccomodationById = async (id: number) => {
+  const { data, error } = await supabase
+    .from("accommodations")
+    .select(
+      `id, name, type_id (name, id), description, city, country, star_rating, image, accommodation_amenities (amenity_id (id, name))`,
+    )
+    .eq("id", id);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+};

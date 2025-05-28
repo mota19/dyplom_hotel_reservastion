@@ -2,7 +2,11 @@
 import { FC, useState, useEffect } from "react";
 import DataTable, { Column } from "./DataTable";
 import { getCookie } from "@/app/_supabase/apiUser";
-import { deleteBooking, getBookingByUser } from "@/app/_supabase/adminApi";
+import {
+  confirmedBooking,
+  deleteBooking,
+  getBookingByUser,
+} from "@/app/_supabase/adminApi";
 
 interface Booking {
   booking_id: number | null;
@@ -149,8 +153,9 @@ const TableBooking: FC = () => {
       statusField="status"
       statusOptions={["confirmed", "unconfirmed"]}
       sortableFields={["pricepernight", "start_date", "amount"]}
-      onEdit={(booking: Booking) => {
-        console.log("Редагую бронювання з ID:", booking.booking_id);
+      text="Confirmed"
+      onEdit={async (booking: Booking) => {
+        if (booking.booking_id) await confirmedBooking(booking.booking_id);
       }}
       onDelete={(booking: Booking) => {
         if (booking.booking_id == null) return;
