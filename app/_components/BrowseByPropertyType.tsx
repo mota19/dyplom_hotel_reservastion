@@ -50,7 +50,7 @@ const BrowseByPropertyType: FC = () => {
           {accomodations.map(({ type, image }) => (
             <CarouselItem
               key={type}
-              className="relative md:basis-1/2 lg:basis-1/3"
+              className="relative cursor-pointer md:basis-1/2 lg:basis-1/3"
               onClick={() => handleClick(type)}
             >
               <Image

@@ -2,9 +2,14 @@
 import { FC, useState, useEffect } from "react";
 import DataTable, { Column } from "./DataTable";
 import Image from "next/image";
-
+import ModalRooms from "./modalRooms";
 import { getCookie } from "@/app/_supabase/apiUser";
-import { getRoomsByUser } from "@/app/_supabase/adminApi";
+import {
+  deleteRoom,
+  getRoomsByUser,
+  getRoomsForUpdate,
+} from "@/app/_supabase/adminApi";
+import { modalDataRooms } from "@/types/supabaseTypes";
 
 interface IRooms {
   accommodation_id: number | null;
@@ -63,6 +68,8 @@ const columns: Column<IRooms>[] = [
 
 const RoomsTable: FC = () => {
   const [data, setData] = useState<IRooms[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<modalDataRooms | null>(null);
 
   useEffect(() => {
     const userId = getCookie("userId");
@@ -87,17 +94,38 @@ const RoomsTable: FC = () => {
   }, []);
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      searchableFields={["name", "description", "room_type"]}
-      sortableFields={[
-        "pricepernight",
-        "capacity",
-        "discount",
-        "accommodation_id",
-      ]}
-    />
+    <>
+      <DataTable
+        data={data}
+        columns={columns}
+        searchableFields={["name", "description", "room_type"]}
+        sortableFields={[
+          "pricepernight",
+          "capacity",
+          "discount",
+          "accommodation_id",
+        ]}
+        onEdit={async (room: IRooms) => {
+          setIsModalOpen(true);
+          const { data } = await getRoomsForUpdate(room.id || 0);
+
+          if (data && Array.isArray(data) && data.length > 0) {
+            setModalData(data[0]);
+          } else {
+            setModalData(null);
+          }
+        }}
+        onDelete={(room: IRooms) => {
+          if (room.id == null) return;
+          deleteRoom(room.id).then(() => {
+            setData((prev) => prev.filter((r) => r.id !== room.id));
+          });
+        }}
+      />
+      {isModalOpen && (
+        <ModalRooms onClose={() => setIsModalOpen(false)} data={modalData} />
+      )}
+    </>
   );
 };
 

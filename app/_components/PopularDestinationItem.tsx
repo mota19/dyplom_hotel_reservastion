@@ -30,7 +30,7 @@ const PopularDestinationItem: FC<Destination> = ({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl ${colSpan} ${rowSpan} col-start-${colStart} `}
+      className={`relative overflow-hidden rounded-2xl ${colSpan} ${rowSpan} col-start-${colStart} cursor-pointer`}
       onClick={() => handleClick(country!)}
     >
       <Image

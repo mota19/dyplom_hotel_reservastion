@@ -2,13 +2,17 @@
 import {
   getAccommodationNameByUser,
   insertRoom,
+  RoomsUpdate,
   uploadImage,
 } from "@/app/_supabase/adminApi";
 import { getCookie } from "@/app/_supabase/apiUser";
+import { modalDataRooms } from "@/types/supabaseTypes";
 import { FC, useState, useEffect } from "react";
+import Image from "next/image";
 
 interface ModalProps {
   onClose: () => void;
+  data?: modalDataRooms | null;
 }
 
 interface IAccommodation {
@@ -24,7 +28,7 @@ const roomBedsID: Record<string, number> = {
   Queen: 5,
 };
 
-const ModalRooms: FC<ModalProps> = ({ onClose }) => {
+const ModalRooms: FC<ModalProps> = ({ onClose, data }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -35,6 +39,7 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
     discount: "",
     type: "",
     image: null as File | null,
+    imageUrl: "",
   });
   const [accommodationData, setAccommodationData] = useState<
     IAccommodation[] | null
@@ -61,6 +66,31 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
     };
     getAcc();
   }, [userId]);
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        name: data.name || "",
+        description: data.description || "",
+        accommodation_id: String(data.accommodation_id.id),
+        sqm: String(data.sqm),
+        capacity: String(data.capacity),
+        pricerPerNight: String(data.pricepernight),
+        discount: String(data.discount),
+        type: data.room_type || "",
+        image: null,
+        imageUrl: data.image || "", // ← додано
+      });
+
+      if (data.room_beds) {
+        const parsedBeds = data.room_beds.map((bed) => ({
+          bed_type_id: bed.bed_types.id,
+          bed_count: bed.bed_count,
+        }));
+        setRoomBeds(parsedBeds);
+      }
+    }
+  }, [data]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -92,7 +122,7 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    let url = "";
+    let url = formData.imageUrl;
 
     if (formData.image && userId) {
       const { publicUrl, error } = await uploadImage(
@@ -122,7 +152,13 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
 
     try {
       const filteredBeds = roomBeds.filter((b) => b.bed_count > 0);
-      await insertRoom(roomsData, filteredBeds);
+
+      if (data && data?.id) {
+        await RoomsUpdate(data?.id, roomsData, filteredBeds);
+      } else {
+        await insertRoom(roomsData, filteredBeds);
+      }
+
       onClose();
     } catch (err) {
       console.error("Room insert failed:", err);
@@ -133,7 +169,7 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/30 backdrop-blur-[4px]">
+    <div className="scroll fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/30 backdrop-blur-[4px]">
       <form
         className="mx-auto w-full max-w-xl rounded-2xl bg-white p-8 shadow-2xl"
         onSubmit={handleSubmit}
@@ -327,6 +363,20 @@ const ModalRooms: FC<ModalProps> = ({ onClose }) => {
         </div>
 
         {/* Image upload */}
+        {formData.imageUrl && (
+          <div className="mb-4">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Current Image
+            </label>
+            <Image
+              src={formData.imageUrl}
+              alt="Current Room"
+              width={2000}
+              height={2000}
+              className="h-40 w-full rounded-xl object-cover"
+            />
+          </div>
+        )}
         <div className="mb-6">
           <label className="mb-1 block text-sm font-medium text-gray-700">
             Image

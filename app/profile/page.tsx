@@ -3,6 +3,7 @@ import Header from "../_components/Header";
 import Footer from "../_components/Footer";
 import ProfileHeader from "../_components/ProfileHeader";
 import ProfileSettings from "../_components/ProfileSettings";
+import YourBookings from "../_components/YourBookings";
 
 const Profile: FC = () => {
   return (
@@ -12,6 +13,7 @@ const Profile: FC = () => {
         <div className="px-8">
           <ProfileHeader />
           <ProfileSettings />
+          <YourBookings />
         </div>
       </div>
       <Footer />

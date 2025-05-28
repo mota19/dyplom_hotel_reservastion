@@ -176,3 +176,73 @@ export async function getDashboardInfo(
 
   return { dat: { apartmentId, bookingDetails }, apartmentError: null };
 }
+
+export async function deleteBooking(id: number) {
+  const { error } = await supabase.from("bookings").delete().eq("id", id);
+
+  return { error };
+}
+
+export async function deleteAccommodation(id: number) {
+  const { error } = await supabase.from("accommodations").delete().eq("id", id);
+
+  return { error };
+}
+
+export async function deleteRoom(id: number) {
+  const { error } = await supabase.from("rooms").delete().eq("id", id);
+
+  return { error };
+}
+
+export async function getRoomsForUpdate(id: number) {
+  const { data, error } = await supabase
+    .from("rooms")
+    .select(
+      `id, name, description, capacity, pricepernight, room_type, image, discount, sqm, accommodation_id (name, id), room_beds (bed_count, bed_types (id,name))`,
+    )
+    .eq("id", id);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}
+
+export async function RoomsUpdate(
+  id: number,
+  roomData: {
+    name: string;
+    description: string;
+    accommodation_id: number;
+    sqm: number;
+    capacity: number;
+    pricepernight: number;
+    discount: number;
+    room_type: string;
+    image: string | null;
+  },
+  beds: { bed_type_id: number; bed_count: number }[],
+) {
+  console.log(beds);
+  const { data, error } = await supabase
+    .from("rooms")
+    .update(roomData)
+    .eq("id", id);
+
+  const bedsInsert = beds.map(({ bed_type_id, bed_count }) => ({
+    room_id: id,
+    bed_type_id,
+    bed_count,
+  }));
+
+  await supabase.from("room_beds").delete().eq("room_id", id);
+
+  const { error: bedsInsertError } = await supabase
+    .from("room_beds")
+    .insert(bedsInsert);
+  if (error || !data) {
+    return { data: null, error };
+  }
+  if (bedsInsertError) return { data: null, error: bedsInsertError };
+  return { data, error: null };
+}

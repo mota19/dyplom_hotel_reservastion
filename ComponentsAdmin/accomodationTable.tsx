@@ -4,6 +4,7 @@ import DataTable, { Column } from "./DataTable";
 import Image from "next/image";
 import { getAccomodationByUser } from "@/app/_supabase/adminApi";
 import { getCookie } from "@/app/_supabase/apiUser";
+import { deleteAccommodation } from "@/app/_supabase/adminApi";
 
 interface IAccommodation {
   id: number;
@@ -86,6 +87,12 @@ const AccommodationTable: FC = () => {
       columns={columns}
       searchableFields={["name", "description", "type_id", "city", "country"]}
       sortableFields={["id", "star_rating"]}
+      onDelete={(accommodation: IAccommodation) => {
+        if (accommodation.id == null) return;
+        deleteAccommodation(accommodation.id).then(() => {
+          setData((prev) => prev.filter((r) => r.id !== accommodation.id));
+        });
+      }}
     />
   );
 };

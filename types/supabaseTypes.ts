@@ -136,3 +136,49 @@ export interface IDashboarInfo {
     status: string | null;
   }[];
 }
+
+export interface IyourBooking {
+  start_date: string;
+  end_date: string;
+  id: number;
+  onDelete?: (id: number) => void;
+  room_id: {
+    name: string | null;
+    capacity: number | null;
+    pricepernight: number | null;
+    image: string | null;
+    room_type: string | null;
+    sqm: number | null;
+
+    room_beds: {
+      bed_count: number;
+      bed_types: {
+        id: number;
+        name: string;
+      };
+    }[];
+  } | null;
+}
+
+export type modalDataRooms = {
+  id: number;
+  name: string | null;
+  description: string | null;
+  capacity: number | null;
+  pricepernight: number | null;
+  room_type: string | null;
+  image: string | null;
+  discount: number | null;
+  sqm: number | null;
+  accommodation_id: {
+    id: number;
+    name: string;
+  };
+  room_beds: {
+    bed_count: number;
+    bed_types: {
+      id: number;
+      name: string;
+    };
+  }[];
+};

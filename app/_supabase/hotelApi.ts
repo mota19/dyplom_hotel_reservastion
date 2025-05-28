@@ -342,3 +342,16 @@ export async function getBookedDatesById(roomId: number) {
 
   return { data, error: null };
 }
+
+export async function getBookingById(userId: string) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select(
+      "start_date, end_date, id, room_id (name, capacity, pricepernight,room_type,sqm, image, room_beds (bed_count, bed_types (id,name)))",
+    )
+    .eq("user_id", userId);
+
+  if (error || !data) return { data: null, error };
+
+  return { data, error: null };
+}
