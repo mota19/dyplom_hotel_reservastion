@@ -34,20 +34,20 @@ const ReservationMain: FC = () => {
     router.push("/booking");
   }
   return (
-    <main className="relative flex h-[400px] flex-col items-center">
+    <main className="relative flex flex-col items-center">
       <Image
         src="/image/Switzerland_Lake_Mountains_Houses_Engelberg_Lake_520074_1920x1080.jpg"
         alt="background-switherland"
         width={1440}
         height={300}
-        className="mb-[100px] h-[300px] w-full rounded-4xl object-cover"
+        className="h-[200px] w-full rounded-[56px] object-cover px-8 md:mb-[100px] md:h-[300px] md:rounded-4xl md:px-0"
       />
       <form
-        className="absolute top-[60%] flex h-[100px] w-[800px] translate-y-2.5 justify-between rounded-4xl bg-white px-4 shadow-lg"
+        className="z-10 mx-auto flex w-[90%] max-w-[800px] translate-y-0 flex-col gap-4 rounded-4xl bg-white px-4 py-4 shadow-lg md:absolute md:top-[60%] md:h-[100px] md:translate-y-2.5 md:flex-row md:justify-between md:gap-0"
         onSubmit={handleSubmit}
       >
-        <div className="flex">
-          <div className="flex h-full flex-col justify-center border-gray-600">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-0">
+          <div className="flex flex-col justify-center border-gray-600">
             <label className="px-2 font-semibold text-gray-700">Location</label>
             <input
               type="text"
@@ -59,16 +59,12 @@ const ReservationMain: FC = () => {
               className="bg-background hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 rounded-md p-2 text-gray-600 placeholder-gray-400 transition-all focus:outline-none"
             />
           </div>
-          <div className="flex h-full flex-col justify-center border-gray-600">
+          <div className="flex flex-col justify-center border-gray-600">
             <label className="px-2 font-semibold text-gray-700">
               Chek-in/Check-out
             </label>
-            <DateRangePicker
-              onDateChange={setRange}
-              width="[260px]"
-            ></DateRangePicker>
+            <DateRangePicker onDateChange={setRange} width="[260px]" />
           </div>
-
           <div className="flex flex-col justify-center">
             <label className="font-semibold text-gray-700">Guests</label>
             <input
@@ -85,7 +81,7 @@ const ReservationMain: FC = () => {
             />
           </div>
         </div>
-        <button className="my-2.5 flex w-[100px] items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600">
+        <button className="my-2.5 flex h-[40px] w-full items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 md:w-[100px]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"

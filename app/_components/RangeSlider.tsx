@@ -11,7 +11,7 @@ const RangeSlider: FC<{
   const [inputMax, setInputMax] = useState(max);
 
   const minLimit = 0;
-  const maxLimit = 1000;
+  const maxLimit = 10000;
 
   const handleRangeChange = (type: "min" | "max", value: number) => {
     const safeValue = Math.max(0, value);

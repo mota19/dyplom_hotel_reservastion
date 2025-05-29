@@ -4,6 +4,7 @@ import infoReducer from "@/redux/slices/infoAboutBooking";
 import userProviderReducer from "@/redux/slices/userProviderSlice";
 import filterReducer from "@/redux/slices/filterSlice";
 import profileSeetingReducer from "@/redux/slices/profileSettings";
+import rangeReducer from "@/redux/slices/rangeSliec";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     userProvider: userProviderReducer,
     filters: filterReducer,
     profileSettings: profileSeetingReducer,
+    range: rangeReducer,
   },
 });
 

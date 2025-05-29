@@ -11,19 +11,9 @@ const ListOfBooking: FC = () => {
   const inDate = useAppSelector((state) => state.info.inDate);
   const outDate = useAppSelector((state) => state.info.outDate);
   const numberOfGuests = useAppSelector((state) => state.info.numberOfGuest);
+  const range = useAppSelector((state) => state.range);
 
   const router = useRouter();
-
-  const validResults = data?.filter((el) => el.city !== "") ?? [];
-
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 5;
-  const totalPages = Math.ceil(validResults.length / itemsPerPage);
-
-  const paginatedData = validResults.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage,
-  );
 
   const parseDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -40,8 +30,28 @@ const ListOfBooking: FC = () => {
     nights = diff > 0 ? Math.floor(diff) : 1;
   }
 
+  const validResults =
+    data
+      ?.filter((el) => el.city !== "")
+      ?.filter(
+        (el) =>
+          (el.cheapestRoom?.pricepernight ?? 0) * nights >=
+            range.priceRange.min &&
+          (el.cheapestRoom?.pricepernight ?? 0) * nights <=
+            range.priceRange.max,
+      ) ?? [];
+
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(validResults.length / itemsPerPage);
+
+  const paginatedData = validResults.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage,
+  );
+
   const getPaginationRange = () => {
-    const delta = 2; // кількість сусідніх сторінок ліворуч/праворуч
+    const delta = 2;
     const range: (number | string)[] = [];
     const left = Math.max(2, page - delta);
     const right = Math.min(totalPages - 1, page + delta);

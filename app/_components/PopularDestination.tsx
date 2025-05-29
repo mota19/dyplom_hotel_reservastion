@@ -9,7 +9,7 @@ const PopularDestination: FC = async () => {
     <div className="flex-1 px-8">
       <h2 className="mb-4 text-2xl font-semibold">Popular destinations</h2>
 
-      <div className="grid h-[400px] grid-cols-4 grid-rows-2 gap-2 pb-10">
+      <div className="grid h-[400px] grid-cols-2 gap-2 pb-10 md:grid-cols-4 md:grid-rows-2">
         {error && <div>some error</div>}
 
         {destinations?.map((item, index) => {

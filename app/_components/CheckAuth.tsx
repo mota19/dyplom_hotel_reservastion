@@ -99,14 +99,14 @@ const CheckAuth = () => {
           ></Image>
           <button
             onClick={handleLogout}
-            className="w-[100px] cursor-pointer rounded-[24px] bg-blue-600 p-4 text-center text-[16px] text-white"
+            className="w-[100px] cursor-pointer rounded-[24px] bg-blue-600 p-4 text-center text-[12px] text-white md:text-[12px] lg:text-[16px]"
           >
             Log out
           </button>
           {role === "host" && (
             <Link
               href="/admin/dashboard"
-              className="w-[100px] cursor-pointer rounded-[24px] bg-red-600 p-4 text-center text-[16px] text-white"
+              className="w-[100px] cursor-pointer rounded-[24px] bg-red-600 p-4 text-center text-[12px] text-white md:text-[12px] lg:text-[16px]"
             >
               Admin
             </Link>
@@ -116,13 +116,13 @@ const CheckAuth = () => {
         <>
           <Link
             href="sign-up"
-            className="w-[100px] rounded-[24px] border-[1px] border-blue-600 bg-white p-4 text-center text-[16px] text-blue-600"
+            className="w-[100px] rounded-[24px] border-[1px] border-blue-600 bg-white p-4 text-center text-[12px] text-blue-600 md:text-[12px] lg:text-[16px]"
           >
             Sign up
           </Link>
           <Link
             href="sign-in"
-            className="w-[100px] rounded-[24px] bg-blue-600 p-4 text-center text-[16px] text-white"
+            className="w-[100px] rounded-[24px] bg-blue-600 p-4 text-center text-[12px] text-white md:text-[12px] lg:text-[16px]"
           >
             Log in
           </Link>

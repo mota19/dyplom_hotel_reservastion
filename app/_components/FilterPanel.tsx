@@ -1,9 +1,10 @@
 "use client";
-import { useState, FC } from "react";
+import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks/hooks";
 import { FilterCategory } from "@/types/filters";
 import { toggleFilter } from "@/redux/slices/filterSlice";
 import RangeSlider from "./RangeSlider";
+import { setPriceRange } from "@/redux/slices/rangeSliec";
 
 const amenities = [
   "Wi-Fi",
@@ -34,11 +35,9 @@ const ratingOptions = ["Any", "Excellent", "Very good", "Good", "Fair", "Poor"];
 const types = ["Hotel", "Motel", "Cabin"];
 
 const FilterPanel: FC = () => {
-  const [min, setMin] = useState(0);
-  const [max, setMax] = useState(1000);
   const dispatch = useAppDispatch();
   const filters = useAppSelector((state) => state.filters);
-
+  const { priceRange } = useAppSelector((state) => state.range);
   const handleCheckboxChange = (
     category: FilterCategory,
     value: string,
@@ -63,8 +62,12 @@ const FilterPanel: FC = () => {
         ))}
       </div>
 
-      <RangeSlider min={min} max={max} setMax={setMax} setMin={setMin} />
-
+      <RangeSlider
+        min={priceRange.min}
+        max={priceRange.max}
+        setMin={(min) => dispatch(setPriceRange({ min, max: priceRange.max }))}
+        setMax={(max) => dispatch(setPriceRange({ min: priceRange.min, max }))}
+      />
       <div>
         <h3 className="mt-2 text-2xl font-semibold">Guest rating</h3>
         {ratingOptions.map((label) => (
