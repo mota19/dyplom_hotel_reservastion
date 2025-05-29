@@ -81,7 +81,7 @@ const ReservationMain: FC = () => {
             />
           </div>
         </div>
-        <button className="my-2.5 flex h-[40px] w-full items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 md:w-[100px]">
+        <button className="flex h-[40px] w-full items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 md:h-[68px] md:w-[100px]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
