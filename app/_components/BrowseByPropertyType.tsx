@@ -23,7 +23,7 @@ const accomodations = [
   },
   {
     type: "Cabin",
-    image: "/image/Cabins.jpg",
+    image: "/image/cabins.jpg",
   },
 ];
 
