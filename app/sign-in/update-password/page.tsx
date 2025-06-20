@@ -25,7 +25,7 @@ const ResetPassword: FC = () => {
           onSubmit={handleSubmit}
         >
           <h2 className="poppins h-[60px] text-center text-[32px]">
-            Recovere your Password
+            Recover your Password
           </h2>
           <label htmlFor="fname" className="text-[16px]">
             New passwod
